@@ -4,7 +4,7 @@ class HTMLPage {
     private $cssSheets = array(); // CSS Sheets collection for the html page
     private $jsScripts = array(); // JS Sheets Collection for the html page.
     private $body = array(); // Array to contain html objects to be generated for the body of the page.
-    function HTMLPage($title) {
+    function __construct ($title) {
         $this->title = $title;
     }
     function setTitle($title) {
@@ -12,6 +12,9 @@ class HTMLPage {
     }
     function appendChild($child) {
         $this->body[] = $child;
+    }
+    function getTitle() {
+        return $this->title;
     }
 }
 ?>
