@@ -1,5 +1,6 @@
 <?php
 class HTMLPage {
+    private $nl = PHP_EOL;
     private $title; // The Title of the HTML Document.
     private $cssSheets = array(); // CSS Sheets collection for the html page
     private $jsScripts = array(); // JS Sheets Collection for the html page.
@@ -15,6 +16,17 @@ class HTMLPage {
     }
     function getTitle() {
         return $this->title;
+    }
+    function addStyleSheet($css) {
+        $this->cssSheets[] = $css;
+    }
+    function getView() {
+        $html = "<html>$this->nl";
+        $html .= "<head>$this->nl";
+        $html .= "<title>$this->title</title>$this->nl";
+        for ($x = 0; $x < count($this->cssSheets); $x++) {
+            $html .= "<link";
+        }
     }
 }
 ?>
