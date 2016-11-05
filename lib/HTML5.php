@@ -20,13 +20,17 @@ class HTMLPage {
     function addStyleSheet($css) {
         $this->cssSheets[] = $css;
     }
+    function addJS($js) {
+        $this->jsScripts[] = $js;
+    }
     function getView() {
         $html = "<html>$this->nl";
         $html .= "<head>$this->nl";
         $html .= "<title>$this->title</title>$this->nl";
         for ($x = 0; $x < count($this->cssSheets); $x++) {
-            $html .= "<link";
+            $html .= "<link rel=\"stylesheet\" href=\"$this->cssSheets[$x]\">$this->nl";
         }
+        return $html;
     }
 }
 ?>
