@@ -28,9 +28,17 @@ class HTMLPage {
         $html .= "<head>$this->nl";
         $html .= "<title>$this->title</title>$this->nl";
         for ($x = 0; $x < count($this->cssSheets); $x++) {
-            $html .= "<link rel=\"stylesheet\" href=\"" . $this->cssSheets[$x] . "\">$this->nl";
+            $html .= "<link rel=\"stylesheet\" href=\"" . $this->cssSheets[$x] . "\"/>$this->nl";
         }
-        for ($x = 0; $x)
+        for ($x = 0; $x < count($this->jsScripts); $x++) {
+            $html .= "<script src=\"" . $this->jsScripts[$x] . "\"></script>$this->nl";
+        }
+        $html .= "</head>$this->nl";
+        for ($x = 0; $x < count($this->body); $x++) {
+            $html .= $this->body[$x]->getView();
+        }
+        $html .= "</body>$this->nl";
+        $html .= "</html>";
         return $html;
     }
 }
