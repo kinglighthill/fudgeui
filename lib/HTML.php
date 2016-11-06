@@ -42,4 +42,21 @@ class HTMLPage {
         return $html;
     }
 }
+class Tag {
+    private $id;
+    private $class;
+    function __construct($id) {
+        $id = str_replace(" ", "", $id);
+        $this->id = $id;
+    }
+    function setClass($class) {
+        $this->class = $class;
+    }
+    function getID() {
+        return $this->id;
+    }
+}
+class DIV extends Tag {
+}
+
 ?>
