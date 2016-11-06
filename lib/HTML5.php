@@ -30,6 +30,7 @@ class HTMLPage {
         for ($x = 0; $x < count($this->cssSheets); $x++) {
             $html .= "<link rel=\"stylesheet\" href=\"" . $this->cssSheets[$x] . "\">$this->nl";
         }
+        for ($x = 0; $x)
         return $html;
     }
 }
