@@ -1,4 +1,5 @@
 <?php
+/*Fundamental HTML Page Class*/
 class HTMLPage {
     private $nl = PHP_EOL;
     private $title; // The Title of the HTML Document.
@@ -44,19 +45,32 @@ class HTMLPage {
 }
 class Tag {
     private $id;
-    private $class;
+    private $_class;
     function __construct($id) {
         $id = str_replace(" ", "", $id);
         $this->id = $id;
     }
-    function setClass($class) {
-        $this->class = $class;
+    function addClass($class) {
+        $this->_class .= $class . " ";
+    }
+    function removeClass($class) {
+        if ($class == "") {
+            $this->_class = "";
+        } else {
+            $this->_class = str_replace($class, "", $this->_class);
+        }
+    }
+    function hasClass($class) {
+        return (strpos("*" . $this->_class, $class) != false);
+    }
+    function getClassString() {
+        return trim($this->_class);
     }
     function getID() {
         return $this->id;
     }
 }
 class DIV extends Tag {
+    private $body;
 }
-
 ?>
