@@ -43,6 +43,12 @@ class HTMLPage {
         return $html;
     }
 }
+class Container {
+    private $contents = array();
+    function addItem($htmlObject) {
+        $this->contents[] = $htmlObject;
+    }
+}
 class Tag {
     private $id;
     private $_class;
