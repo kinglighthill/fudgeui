@@ -62,7 +62,7 @@ class HTMLItem {
         return $this->content;
     }
 }
-class Container {
+class HTMLContainer {
     private $contents = array();
     function addItem($htmlObject) {
         if (method_exists($htmlObject, "getTagName")){
