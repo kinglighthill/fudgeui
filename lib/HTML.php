@@ -65,10 +65,19 @@ class HTMLItem {
 class HTMLContainer {
     private $contents = array();
     function addItem($htmlObject) {
-        if (method_exists($htmlObject, "getTagName")){
+        if (method_exists($htmlObject, "getTagName") && method_exists($htmlObject, "getView") && get_class($htmlObject) != "Tag"){
             $this->contents[] = $htmlObject;
         }
-
+    }
+    function getItemCount() {
+        return count($this->contents);
+    }
+    function getView() {
+        $html = "";
+        for ($x = 0; $x < count($this->contents); $x++) {
+            $html .= $this->contents[$x]->getView() . PHP_EOL;
+        }
+        return $html;
     }
 }
 class Tag {
