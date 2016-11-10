@@ -64,12 +64,12 @@ class HTMLItem {
 }
 class HTMLContainer {
     private $contents = array();
-    function addItem($htmlObject) {
+    function appendChild($htmlObject) {
         if (method_exists($htmlObject, "getTagName") && method_exists($htmlObject, "getView") && get_class($htmlObject) != "Tag"){
             $this->contents[] = $htmlObject;
         }
     }
-    function getItemCount() {
+    function getChildCount() {
         return count($this->contents);
     }
     function getView() {
@@ -87,6 +87,14 @@ class Tag {
     function __construct($id) {
         $id = str_replace(" ", "", $id);
         $this->id = $id;
+        $this->name = strtolower(get_class($this)); // Sets Tag object Name.
+        /*
+        The classes that extend the Tag class must have the same name as the corresponding html tag
+        being implemented. (case insensitive but should be neat and uniform).
+        Tag Class names follow the rules below.
+        3 letters - All Caps.
+        >3 Letters - First Cap.
+        */
     }
     function addClass($class) {
         $this->_class .= $class . " ";
@@ -107,8 +115,21 @@ class Tag {
     function getID() {
         return $this->id;
     }
+    function getTagName() {
+        return $this->name;
+    }
 }
 class DIV extends Tag {
-    private $body;
+    private $body = array();
+    function setChild($child) {
+        $this->body = array();
+        $this->body[] = $child;
+    }
+    function appendChild($child) {
+        $this->body[] = $child;
+    }
+    function getView() {
+        
+    }
 }
 ?>

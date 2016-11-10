@@ -1,15 +1,22 @@
 <?php
 class HTMLContainerTest extends PHPunit_Framework_Testcase {
-    function testAddItemWithString() {
+    function testAppendChildWithString() {
         $container = new HTMLContainer();
-        $container->addItem("hello");
-        $this->assertEquals(0, $container->getItemCount());
+        $container->appendChild("hello");
+        $this->assertEquals(0, $container->getChildCount());
     }
-    function testAddItemWithTagObject() {
+    function testAppendChildWithTagObject() {
         $container = new HTMLContainer();
         $tag = new Tag("id");
-        $container->addItem($tag);
-        $this->assertEquals(0, $container->getItemCount());
+        $container->appendChild($tag);
+        $this->assertEquals(0, $container->getChildCount());
     }
+    function testAppendChildWithProperObject() {
+        $container = new HTMLContainer();
+        $div = new DIV("id");
+        $container->appendChild($div);
+        $this->assertEquals(1, $container->getChildCount()); // Will Fail Unitil DIV class is properly implemented.
+    }
+    // MoreTests to come.
 }
 ?>
