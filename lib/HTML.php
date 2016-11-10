@@ -43,15 +43,38 @@ class HTMLPage {
         return $html;
     }
 }
+class HTMLItem {
+    private $content;
+    private $name = "htmlItem";
+    function __construct($content) {
+        $this->content = $content;
+    }
+    function setContent($content) {
+        $this->content = $content;
+    }
+    function appendContent($content) {
+        $this->content .= $content;
+    }
+    function getTagName() {
+        return $this->name;
+    }
+    function getView() {
+        return $this->content;
+    }
+}
 class Container {
     private $contents = array();
     function addItem($htmlObject) {
-        $this->contents[] = $htmlObject;
+        if (method_exists($htmlObject, "getTagName")){
+            $this->contents[] = $htmlObject;
+        }
+
     }
 }
 class Tag {
     private $id;
     private $_class;
+    private $name;
     function __construct($id) {
         $id = str_replace(" ", "", $id);
         $this->id = $id;
