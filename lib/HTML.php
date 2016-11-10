@@ -129,7 +129,11 @@ class DIV extends Tag {
         $this->body[] = $child;
     }
     function getView() {
-        
+      $html = "<div ";
+      for ($x = 0; $x < count($this->body); $x++) {
+        $html .= $this->body[$x]->getView() . PHP_EOL;
+      }
+      return $html;
     }
 }
 ?>
