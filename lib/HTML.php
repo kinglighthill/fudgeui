@@ -1,5 +1,7 @@
 <?php
-/*Fundamental HTML Page Class*/
+/**
+ * Fundamental HTML Page Class
+ */
 class HTMLPage {
     private $nl = PHP_EOL;
     private $title; // The Title of the HTML Document.
@@ -84,6 +86,7 @@ class Tag {
     private $id;
     private $_class;
     private $name;
+    private $style;
     function __construct($id) {
         $id = str_replace(" ", "", $id);
         $this->id = $id;
@@ -95,6 +98,11 @@ class Tag {
         3 letters - All Caps.
         >3 Letters - First Cap.
         */
+    }
+    function addCSSRule($property, $val) {
+      if ($property != "" && $val != "") {
+        $this->style .= "$property:$val;";
+      }
     }
     function addClass($class) {
         $this->_class .= $class . " ";
@@ -118,6 +126,12 @@ class Tag {
     function getTagName() {
         return $this->name;
     }
+    protected function attribute($att, $val) {
+      if ($val != "") {
+        return "$att=$val ";
+      }
+       return "";
+    }
 }
 class DIV extends Tag {
     private $body = array();
@@ -130,9 +144,13 @@ class DIV extends Tag {
     }
     function getView() {
       $html = "<div ";
+      $html .= $this->attribute("id", $this->id);
+      $html .= $this->attribute("class", $this->_class);
+      $html = trim($html) . ">" . PHP_EOL;
       for ($x = 0; $x < count($this->body); $x++) {
         $html .= $this->body[$x]->getView() . PHP_EOL;
       }
+      $html .= "</div>" . PHP_EOL;
       return $html;
     }
 }
