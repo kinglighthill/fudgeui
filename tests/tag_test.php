@@ -44,5 +44,10 @@ class TagTest extends PHPunit_Framework_Testcase {
         $tag->removeClass("");
         $this->assertFalse($tag->hasClass("world"));
     }
+    function testCSSStyleAttributes() {
+      $tag = new Tag("id");
+      $tag->addCSSRule("color", "black");
+      $this->assertEquals("color:black;", $tag->getCSSRules()); 
+    }
 }
 ?>
