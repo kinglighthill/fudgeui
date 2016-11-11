@@ -83,10 +83,10 @@ class HTMLContainer {
     }
 }
 class Tag {
-    private $id;
-    private $_class;
-    private $name;
-    private $style;
+    protected $id;
+    protected $_class;
+    protected $name;
+    protected $style;
     function __construct($id) {
         $id = str_replace(" ", "", $id);
         $this->id = $id;
@@ -127,30 +127,34 @@ class Tag {
         return $this->name;
     }
     protected function attribute($att, $val) {
+      // TODO: Validate for cases where the attribute value can contain double quotes and format differently.
       if ($val != "") {
-        return "$att=$val ";
+        return " $att=\"$val\"";
       }
        return "";
     }
 }
 class DIV extends Tag {
-    private $body = array();
+  private $body;
     function setChild($child) {
         $this->body = array();
-        $this->body[] = $child;
     }
     function appendChild($child) {
+      if (get_parent_class($child) == "Tag") {
         $this->body[] = $child;
+      }
     }
     function getView() {
-      $html = "<div ";
+      $html = "<div";
       $html .= $this->attribute("id", $this->id);
-      $html .= $this->attribute("class", $this->_class);
-      $html = trim($html) . ">" . PHP_EOL;
-      for ($x = 0; $x < count($this->body); $x++) {
-        $html .= $this->body[$x]->getView() . PHP_EOL;
+      $html .= $this->attribute("class", $this->getClassString());
+      $html .= ">" . PHP_EOL;
+      if (count($this->body) > 0) {
+        for ($x = 0; $x < count($this->body); $x++) {
+          $html .= $this->body[$x]->getView() . PHP_EOL;
+        }
       }
-      $html .= "</div>" . PHP_EOL;
+      $html = trim($html) . PHP_EOL . "</div>" . PHP_EOL;
       return $html;
     }
 }

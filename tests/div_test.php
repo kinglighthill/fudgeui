@@ -11,11 +11,12 @@ class DIVTest extends PHPunit_Framework_Testcase {
   }
   function testDIVAttributesFormatting() {
     $div = new DIV("id");
-    $result = strpos($div->getView(), "<div id=\"id\">" . PHP_EOL . "</div>") != false;
+    $result = strpos($div->getView(), "div id=\"id\">" . PHP_EOL . "</div>") != false;
     $this->logger->log($div->getView());
     $this->assertTrue($result);
     $div->addClass("hello");
-    $result = strpos($div->getView(), "<div id=\"id\" class=\"hello\">" . PHP_EOL . "</div>") != false;
+    $this->logger->log($div->getView());
+    $result = strpos($div->getView(), "div id=\"id\" class=\"hello\">" . PHP_EOL . "</div>") != false;
     $this->assertTrue($result);
   }
 }
