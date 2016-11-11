@@ -1,6 +1,9 @@
 <phpunit bootstrap="lib/HTML.php">
   <testsuites>
     <testsuite name="html">
+      <file>tests/page_test.php</file>
+      <file>tests/html_container_test.php</file>
+      <file>tests/tag_test.php</file>
       <file>tests/div_test.php</file>
     </testsuite>
   </testsuites>
