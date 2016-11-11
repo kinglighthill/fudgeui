@@ -87,6 +87,7 @@ class Tag {
     protected $_class;
     protected $name;
     protected $style;
+    protected $body;
     function __construct($id) {
         $id = str_replace(" ", "", $id);
         $this->id = $id;
@@ -139,21 +140,20 @@ class Tag {
       }
        return "";
     }
-}
-class DIV extends Tag {
-  private $body;
-    function setChild($child) {
-        $this->body = array();
-    }
     /**
      * [appendChild function to append html object to body of html object.]
      * @param  [string] $child [html object]
      * @return [null]
      */
-    function appendChild($child) {
+    protected function appendChild($child) {
       if (get_parent_class($child) == "Tag") {
         $this->body[] = $child;
       }
+    }
+}
+class DIV extends Tag {
+    function setChild($child) {
+        $this->body = array();
     }
     /**
      * [getView function to generate html equival of the html object.]
@@ -173,5 +173,7 @@ class DIV extends Tag {
       $html = trim($html) . PHP_EOL . "</div>" . PHP_EOL;
       return $html;
     }
+}
+class P extends Tag {
 }
 ?>
