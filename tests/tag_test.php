@@ -47,7 +47,7 @@ class TagTest extends PHPunit_Framework_Testcase {
     function testCSSStyleAttributes() {
       $tag = new Tag("id");
       $tag->addCSSRule("color", "black");
-      $this->assertEquals("color:black;", $tag->getCSSRules()); 
+      $this->assertEquals("color:black;", $tag->getCSSRules());
     }
 }
 ?>
