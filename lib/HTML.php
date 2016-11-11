@@ -150,11 +150,12 @@ class Tag {
         $this->body[] = $child;
       }
     }
-}
-class DIV extends Tag {
     function setChild($child) {
         $this->body = array();
+        $this->body[] = $child;
     }
+}
+class DIV extends Tag {
     /**
      * [getView function to generate html equival of the html object.]
      * @return [string] [html rep. of object]
@@ -175,5 +176,37 @@ class DIV extends Tag {
     }
 }
 class P extends Tag {
+  function getView() {
+    $html = "<p";
+    $html .= $this->attribute("id", $this->id);
+    $html .= $this->attribute("class", $this->getClassString());
+    $html .= $this->attribute("style", $this->style);
+    $html .= ">";
+    $c = count($this->body);
+    if ($c <= 1 && !is_object($this->body[0])) {
+      if ($c != 0) {
+        if (strlen($this->body[0]) < 50) {
+          $html .= $this->body[0] . "</p>" . PHP_EOL;
+        } else {
+          $html .= PHP_EOL;
+          $html .= $this->body[0] . PHP_EOL;
+          $html .= "</p>" . PHP_EOL;
+        }
+      } else {
+        return "";
+      }
+    } else {
+      $html .= PHP_EOL;
+      for ($x = 0; $x < count($this->body); $x++) {
+        if (is_array($this->body[$x])) {
+          $html .= $this->body[$x]->getView();
+        } else {
+          $html .= $this->body[$x];
+        }
+      }
+      $html .= "</p>" . PHP_EOL;
+    }
+    return $html;
+  }
 }
 ?>
