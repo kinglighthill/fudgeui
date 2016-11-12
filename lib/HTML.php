@@ -150,6 +150,10 @@ class Tag {
         $this->body[] = $child;
       }
     }
+    /**
+     * [setChild description]
+     * @param [type] $child [description]
+     */
     function setChild($child) {
         $this->body = array();
         $this->body[] = $child;
