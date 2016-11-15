@@ -1,53 +1,53 @@
 <?php
-class TagTest extends PHPunit_Framework_Testcase {
-    function testTagConstructor() {
-        $tag = new Tag("id");
-        $this->assertEquals("id", $tag->getID());
+class HTMLObjectTest extends PHPunit_Framework_Testcase {
+    function testHTMLObjectConstructor() {
+        $HTMLObject = new HTMLObject("id");
+        $this->assertEquals("id", $HTMLObject->getID());
     }
     function testClassesGetterAndSetter() {
-        $tag = new Tag("id");
-        $tag->addClass("pointer");
-        $result = $tag->getClassString();
+        $HTMLObject = new HTMLObject("id");
+        $HTMLObject->addClass("pointer");
+        $result = $HTMLObject->getClassString();
         $this->assertEquals("pointer", $result);
-        $tag->addClass("w3-card");
-        $result = $tag->getClassString();
+        $HTMLObject->addClass("w3-card");
+        $result = $HTMLObject->getClassString();
         $this->assertEquals("pointer w3-card", $result);
-        $tag->addClass("IBM");
-        $result = $tag->getClassString();
+        $HTMLObject->addClass("IBM");
+        $result = $HTMLObject->getClassString();
         $this->assertEquals("pointer w3-card IBM", $result);
     }
     function testRemoveClass() {
-        $tag = new Tag("id");
-        $tag->addClass("pointer");
-        $tag->addClass("w3-card");
-        $tag->removeClass("pointer");
-        $result = $tag->getClassString();
+        $HTMLObject = new HTMLObject("id");
+        $HTMLObject->addClass("pointer");
+        $HTMLObject->addClass("w3-card");
+        $HTMLObject->removeClass("pointer");
+        $result = $HTMLObject->getClassString();
         $this->assertEquals("w3-card", $result);
-        $tag->removeClass("yes");
-        $result = $tag->getClassString();
+        $HTMLObject->removeClass("yes");
+        $result = $HTMLObject->getClassString();
         $this->assertEquals("w3-card", $result);
-        $tag->addClass("golem");
-        $tag->removeClass("");
-        $result = $tag->getClassString();
+        $HTMLObject->addClass("golem");
+        $HTMLObject->removeClass("");
+        $result = $HTMLObject->getClassString();
         $this->assertEquals("", $result);
     }
     function testHasClass() {
-        $tag = new Tag("id");
-        $tag->addClass("hello");
-        $this->assertTrue($tag->hasClass("hello"));
-        $tag->addClass("world");
-        $this->assertTrue($tag->hasClass("hello"));
-        $this->assertTrue($tag->hasClass("world"));
-        $tag->removeClass("hello");
-        $this->assertTrue($tag->hasClass("world"));
-        $this->assertFalse($tag->hasClass("hello"));
-        $tag->removeClass("");
-        $this->assertFalse($tag->hasClass("world"));
+        $HTMLObject = new HTMLObject("id");
+        $HTMLObject->addClass("hello");
+        $this->assertTrue($HTMLObject->hasClass("hello"));
+        $HTMLObject->addClass("world");
+        $this->assertTrue($HTMLObject->hasClass("hello"));
+        $this->assertTrue($HTMLObject->hasClass("world"));
+        $HTMLObject->removeClass("hello");
+        $this->assertTrue($HTMLObject->hasClass("world"));
+        $this->assertFalse($HTMLObject->hasClass("hello"));
+        $HTMLObject->removeClass("");
+        $this->assertFalse($HTMLObject->hasClass("world"));
     }
     function testCSSStyleAttributes() {
-      $tag = new Tag("id");
-      $tag->addCSSRule("color", "black");
-      $this->assertEquals("color:black;", $tag->getCSSRules());
+      $HTMLObject = new HTMLObject("id");
+      $HTMLObject->addCSSRule("color", "black");
+      $this->assertEquals("color:black;", $HTMLObject->getCSSRules());
     }
 }
 ?>

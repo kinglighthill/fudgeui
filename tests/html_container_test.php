@@ -7,7 +7,7 @@ class HTMLContainerTest extends PHPunit_Framework_Testcase {
     }
     function testAppendChildWithTagObject() {
         $container = new HTMLContainer();
-        $tag = new Tag("id");
+        $tag = new HTMLObject("id");
         $container->appendChild($tag);
         $this->assertEquals(0, $container->getChildCount());
     }
