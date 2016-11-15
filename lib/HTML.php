@@ -3,17 +3,30 @@
  * Fundamental HTML Page Class
  */
 class HTMLPage {
-  private $nl = PHP_EOL;
+  private $nl = PHP_EOL; // New line character;
   private $title; // The Title of the HTML Document.
   private $cssSheets = array(); // CSS Sheets collection for the html page
   private $jsScripts = array(); // JS Sheets Collection for the html page.
   private $body = array(); // Array to contain html objects to be generated for the body of the page.
+  /**
+   * [__construct constructor for the html page object.]
+   * @param [string] $title [the tile of the html page]
+   */
   function __construct ($title) {
       $this->title = $title;
   }
+  /**
+   * [setTitle sets the title of the html page]
+   * @param [string] $title [the new title of the html page]
+   */
   function setTitle($title) {
       $this->title = $title;
   }
+  /**
+   * [appendChild adds html objects to the html page body tag or just body...:)]
+   * @param  [htmlObject] $child [html object]
+   * @return [type]        [description]
+   */
   function appendChild($child) {
       $this->body[] = $child;
   }
@@ -82,7 +95,7 @@ class HTMLContainer {
         return $html;
     }
 }
-class Tag {
+class HTMLObject {
     protected $id;
     protected $_class;
     protected $name;
@@ -145,7 +158,7 @@ class Tag {
      * @param  [string] $child [html object]
      * @return [null]
      */
-    protected function appendChild($child) {
+    function appendChild($child) {
       if (get_parent_class($child) == "Tag") {
         $this->body[] = $child;
       }
@@ -159,7 +172,7 @@ class Tag {
         $this->body[] = $child;
     }
 }
-class DIV extends Tag {
+class DIV extends HTMLObject {
     /**
      * [getView function to generate html equival of the html object.]
      * @return [string] [html rep. of object]
@@ -179,7 +192,7 @@ class DIV extends Tag {
       return $html;
     }
 }
-class P extends Tag {
+class P extends HTMLObject {
   function getView() {
     $html = "<p";
     $html .= $this->attribute("id", $this->id);
