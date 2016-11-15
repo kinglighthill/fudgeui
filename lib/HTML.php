@@ -24,21 +24,39 @@ class HTMLPage {
   }
   /**
    * [appendChild adds html objects to the html page body tag or just body...:)]
-   * @param  [htmlObject] $child [html object]
-   * @return [type]        [description]
+   * @param  [HTMLObject] $child [html object]
+   * @return [null]
    */
   function appendChild($child) {
       $this->body[] = $child;
   }
+  /**
+   * [getTitle gets the title of the html page]
+   * @return [string] [the title of the html page]
+   */
   function getTitle() {
       return $this->title;
   }
+  /**
+   * [addStyleSheet adds a url css link to the head section of the html page
+   *                equivalent of "<link rel="stylesheet" href="$css"/>]
+   * @param [string] $css [url to css file (can be relative)]
+   */
   function addStyleSheet($css) {
       $this->cssSheets[] = $css;
   }
+  /**
+   * [addJS adds a url to a script tag in a html page
+   *        equivalent of <script src="$js"></script>]
+   * @param [string] $js [the url to the .js file (can be relative)]
+   */
   function addJS($js) {
       $this->jsScripts[] = $js;
   }
+  /**
+   * [getView outputs the html representation of the html page]
+   * @return [null] 
+   */
   function getView() {
       $html = "<html>$this->nl";
       $html .= "<head>$this->nl";
