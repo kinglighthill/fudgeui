@@ -8,12 +8,20 @@ class HTMLPage {
   private $cssSheets = array(); // CSS Sheets collection for the html page
   private $jsScripts = array(); // JS Sheets Collection for the html page.
   private $body = array(); // Array to contain html objects to be generated for the body of the page.
+  private $lang = "en-US"; // The language of the html page.
   /**
    * [__construct constructor for the html page object.]
    * @param [string] $title [the tile of the html page]
    */
   function __construct ($title) {
       $this->title = $title;
+  }
+  /**
+   * [setLanguage sets the language of the html page]
+   * @param [string] $lang [the language to set to e.g. "en-US"]
+   */
+  function setLanguage($lang) {
+    $this->lang = $lang;
   }
   /**
    * [setTitle sets the title of the html page]
@@ -55,10 +63,10 @@ class HTMLPage {
   }
   /**
    * [getView outputs the html representation of the html page]
-   * @return [null] 
+   * @return [null]
    */
   function getView() {
-      $html = "<html>$this->nl";
+      $html = "<html" . $this->attribute("lang", $this->lang) .  ">$this->nl";
       $html .= "<head>$this->nl";
       $html .= "<title>$this->title</title>$this->nl";
       for ($x = 0; $x < count($this->cssSheets); $x++) {
@@ -74,6 +82,13 @@ class HTMLPage {
       $html .= "</body>$this->nl";
       $html .= "</html>";
       return $html;
+  }
+  private function attribute($att, $val) {
+    // TODO: Validate for cases where the attribute value can contain double quotes and format differently.
+    if ($val != "") {
+      return " $att=\"$val\"";
+    }
+     return "";
   }
 }
 class HTMLItem {
