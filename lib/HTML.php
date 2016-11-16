@@ -76,6 +76,7 @@ class HTMLPage {
           $html .= "<script src=\"" . $this->jsScripts[$x] . "\"></script>$this->nl";
       }
       $html .= "</head>$this->nl";
+      $html .= "<body>$this->nl";
       for ($x = 0; $x < count($this->body); $x++) {
           $html .= $this->body[$x]->getView();
       }
@@ -83,6 +84,13 @@ class HTMLPage {
       $html .= "</html>";
       return $html;
   }
+  /**
+   * [attribute a function that decides wether an attribute is to be added to an html tag
+   *            during rendering]
+   * @param  [type] $att [description]
+   * @param  [type] $val [description]
+   * @return [type]      [description]
+   */
   private function attribute($att, $val) {
     // TODO: Validate for cases where the attribute value can contain double quotes and format differently.
     if ($val != "") {
