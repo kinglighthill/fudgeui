@@ -87,33 +87,63 @@ class HTMLPage {
   /**
    * [attribute a function that decides wether an attribute is to be added to an html tag
    *            during rendering]
-   * @param  [type] $att [description]
-   * @param  [type] $val [description]
-   * @return [type]      [description]
+   * @param  [string] $att [attribute name]
+   * @param  [string] $val [attribute value]
+   * @return [string]      [proper attribute value pair, returns empty string if attribute value
+   *                               is empty]
    */
   private function attribute($att, $val) {
-    // TODO: Validate for cases where the attribute value can contain double quotes and format differently.
+    $val = str_replace("\"", "''", $val); // change double quote to single if found in the string
     if ($val != "") {
       return " $att=\"$val\"";
     }
      return "";
   }
 }
+/**
+ * Class for HTML Item that can be used to put in contents into HTMLContainer class
+ * Note: Do you not use this class trivially. this class is meant to be used to input
+ * either a custon no html text in to a web page or you want to uses html tags or content that
+ * is not yet supported.
+ */
 class HTMLItem {
-    private $content;
+    private $content; // the content of this uhtml item.
     private $name = "htmlItem";
+    /**
+     * [__construct initializes the htmlItem with its supposed content]
+     * @param [string] $content [content to contain/hold (this is not an array)]
+     */
     function __construct($content) {
         $this->content = $content;
     }
+    /**
+     * [setContent sets the content of the htmlItem. This replaces the old content]
+     * @param [string] $content [the new content of the htmlItem]
+     */
     function setContent($content) {
         $this->content = $content;
     }
+    /**
+     * [appendContent appends new content specified to the end of the old content]
+     * @param  [string] $content [the new content to append to the old one]
+     * @return [null]
+     */
     function appendContent($content) {
         $this->content .= $content;
     }
+    /**
+     * [getTagName gets the supposed tag name of this object, this is a special case as this object
+     *             does not ideally reperesent an html tag but this function is here for compatibility reasons.]
+     * @return [string] [name of the supposed tag this object represents.. (htmlItem) here which
+     *                      is not contained in html.]
+     */
     function getTagName() {
         return $this->name;
     }
+    /**
+     * [getView renders the html of the object]
+     * @return [string] [html of the object]
+     */
     function getView() {
         return $this->content;
     }
