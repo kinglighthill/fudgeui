@@ -203,20 +203,43 @@ class HTMLObject {
         >3 Letters - First Cap.
         */
     }
+    /**
+     * [addCSSRule adds a css rule to the style attribute]
+     * @param [type] $property [css property]
+     * @param [type] $val      [css value]
+     */
     function addCSSRule($property, $val) {
       if ($property != "" && $val != "") {
         $this->style .= "$property:$val;";
       }
     }
+    /**
+     * [getCSSRules gets all set css rules for the html object. (equvalent of
+     *              all rules in style attribute)]
+     * @return [string] [css rules]
+     */
     function getCSSRules() {
       return $this->style;
     }
+    /**
+     * [setCSSRuleString sets the style attribute]
+     * @param [string] $style [css rules]
+     */
     function setCSSRuleString($style) {
       $this->style = $style;
     }
+    /**
+     * [addClass adds/appends a class to the class attribute]
+     * @param [string] $class [css class]
+     */
     function addClass($class) {
         $this->_class .= $class . " ";
     }
+    /**
+     * [removeClass removes the specified class from the class attribute]
+     * @param  [type] $class [class to remove]
+     * @return [null]
+     */
     function removeClass($class) {
         if ($class == "") {
             $this->_class = "";
@@ -224,6 +247,11 @@ class HTMLObject {
             $this->_class = str_replace($class, "", $this->_class);
         }
     }
+    /**
+     * [hasClass checks existence of the specified class in the class attribute]
+     * @param  [type]  $class [css class to check if exists]
+     * @return boolean        [true if class exists, flase if not exists]
+     */
     function hasClass($class) {
         return (strpos("*" . $this->_class, $class) != false);
     }
