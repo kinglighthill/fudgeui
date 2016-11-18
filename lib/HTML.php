@@ -148,16 +148,33 @@ class HTMLItem {
         return $this->content;
     }
 }
+/**
+ * A class that does pretty much what the HTMLPage class does but is not an html
+ * page but a container that holds other html objects.
+ */
 class HTMLContainer {
-    private $contents = array();
+    private $contents = array(); // The array that holds all html items.
+    /**
+     * [appendChild adds htmlObjects to the contents array.]
+     * @param  [type] $htmlObject [valid HTMLObject]
+     * @return [null]
+     */
     function appendChild($htmlObject) {
         if (method_exists($htmlObject, "getTagName") && method_exists($htmlObject, "getView") && get_class($htmlObject) != "Tag"){
             $this->contents[] = $htmlObject;
         }
     }
+    /**
+     * [getChildCount gets the number of htmlObjects in the contents array.]
+     * @return [int] [number of htmlObjects in the contents array.]
+     */
     function getChildCount() {
         return count($this->contents);
     }
+    /**
+     * [getView renders the html form of the htmlObject]
+     * @return [string] [html reprsentation of the HTMLContainer and all it's contents.]
+     */
     function getView() {
         $html = "";
         for ($x = 0; $x < count($this->contents); $x++) {
@@ -167,11 +184,13 @@ class HTMLContainer {
     }
 }
 class HTMLObject {
-    protected $id;
+    protected $id; // ID of the HMTLObject.
     protected $_class;
     protected $name;
-    protected $style;
-    protected $body;
+    protected $style; // variable for the style attribute.
+    protected $body = array(); // The array that conatians html objects that children of the current html object
+    protected $title; // popup text.
+    protected $attributesString; // a string containing all attribute value pair.
     function __construct($id) {
         $id = str_replace(" ", "", $id);
         $this->id = $id;
@@ -217,12 +236,45 @@ class HTMLObject {
     function getTagName() {
         return $this->name;
     }
+    function setPopUpText($poup) {
+      $this->title = $title;
+    }
+    /**
+     * [setAttribute sets attributes of the html object.]
+     * @param [string] $att [attribute name.]
+     * @param [string] $val [attribute value.]
+     */
+    function setAttribute($att, $val) {
+      $buffer = $this->attribute($att, $val);
+      if (strpos($this->attributesString, $att) != false) {
+        $attArray = explode(" ", $this->attributesString);
+        for ($x = 0; $x < count ($attArray); $x++) {
+          if (preg_match("/$att/", $attArray[$x])) {
+            $attArray[$x] = $buffer;
+            $this->attributesString = implode(" ", $attArray);
+            break;
+          }
+        }
+      } else {
+        $this->attributesString .= $buffer;
+      }
+    }
+    function getAttribute($att) {
+      $attArray = explode(" ", $this->attributesString);
+      for ($x = 0; $x < count ($attArray); $x++) {
+        if (preg_match("/$att/", $attArray[$x])) {
+          $val = substr(substr($attArray[$x], strpos($attArray[$x], "=") + 1), 1);
+          return substr($val, 0, strlen($val) - 1);
+        }
+      }
+      return "";
+    }
     protected function attribute($att, $val) {
       // TODO: Validate for cases where the attribute value can contain double quotes and format differently.
       if ($val != "") {
         return " $att=\"$val\"";
       }
-       return "";
+      return "";
     }
     /**
      * [appendChild function to append html object to body of html object.]
@@ -253,6 +305,7 @@ class DIV extends HTMLObject {
       $html .= $this->attribute("id", $this->id);
       $html .= $this->attribute("class", $this->getClassString());
       $html .= $this->attribute("style", $this->style);
+      $html .= $this->attributesString;
       $html .= ">" . PHP_EOL;
       if (count($this->body) > 0) {
         for ($x = 0; $x < count($this->body); $x++) {
@@ -269,6 +322,7 @@ class P extends HTMLObject {
     $html .= $this->attribute("id", $this->id);
     $html .= $this->attribute("class", $this->getClassString());
     $html .= $this->attribute("style", $this->style);
+    $html .= $this->attributesString;
     $html .= ">";
     $c = count($this->body);
     if ($c <= 1 && !is_object($this->body[0])) {

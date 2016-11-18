@@ -49,5 +49,11 @@ class HTMLObjectTest extends PHPunit_Framework_Testcase {
       $HTMLObject->addCSSRule("color", "black");
       $this->assertEquals("color:black;", $HTMLObject->getCSSRules());
     }
+    function testAttribution() {
+      $obj = new HTMLObject("id");
+      $obj->setAttribute("href", "hello");
+      $obj->setAttribute("href", "world");
+      $this->assertEquals("world", $obj->getAttribute("href"));
+    }
 }
 ?>
