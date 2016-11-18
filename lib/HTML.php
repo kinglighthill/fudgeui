@@ -255,17 +255,33 @@ class HTMLObject {
     function hasClass($class) {
         return (strpos("*" . $this->_class, $class) != false);
     }
+    /**
+     * [getClassString gets the value of the class attribute]
+     * @return [string] [space seperated css classes]
+     */
     function getClassString() {
         return trim($this->_class);
     }
+    /**
+     * [getID gets the id of the html element]
+     * @return [string] [id string]
+     */
     function getID() {
         return $this->id;
     }
+    /**
+     * [getTagName gets the tag name of the html tag]
+     * @return [string] [html tag name]
+     */
     function getTagName() {
         return $this->name;
     }
-    function setPopUpText($poup) {
-      $this->title = $title;
+    /**
+     * [setPopUpText sets the title attribute of the html tag]
+     * @param [string] $popup [the value of the title attribute]
+     */
+    function setPopUpText($popup) {
+      $this->title = $popup;
     }
     /**
      * [setAttribute sets attributes of the html object.]
@@ -287,6 +303,11 @@ class HTMLObject {
         $this->attributesString .= $buffer;
       }
     }
+    /**
+     * [getAttribute gets the value of the specified attribute]
+     * @param  [string] $att [attribute]
+     * @return [string]      [value of the specified attribute, empty string if value is unset]
+     */
     function getAttribute($att) {
       $attArray = explode(" ", $this->attributesString);
       for ($x = 0; $x < count ($attArray); $x++) {
@@ -297,6 +318,14 @@ class HTMLObject {
       }
       return "";
     }
+    /**
+     * [attribute a function that decides wether an attribute is to be added to an html tag
+     *            during rendering]
+     * @param  [string] $att [attribute name]
+     * @param  [string] $val [attribute value]
+     * @return [string]      [proper attribute value pair, returns empty string if attribute value
+     *                               is empty]
+     */
     protected function attribute($att, $val) {
       // TODO: Validate for cases where the attribute value can contain double quotes and format differently.
       if ($val != "") {
@@ -323,10 +352,13 @@ class HTMLObject {
         $this->body[] = $child;
     }
 }
+/**
+ * DIV tag (HTML).
+ */
 class DIV extends HTMLObject {
     /**
      * [getView function to generate html equival of the html object.]
-     * @return [string] [html rep. of object]
+     * @return [string] [html representation of object]
      */
     function getView() {
       $html = "<div";
@@ -344,6 +376,9 @@ class DIV extends HTMLObject {
       return $html;
     }
 }
+/**
+ * P tag (HTML)
+ */
 class P extends HTMLObject {
   function getView() {
     $html = "<p";
