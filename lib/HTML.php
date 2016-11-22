@@ -8,7 +8,7 @@ define("Version", "0.1");
  */
 class HTMLValidator {
   private $inputTypes = array("text", "file", "password", "submit",
-                              "reset", "checkbox");
+                              "reset", "checkbox", "button");
   function validInput($input) {
     return in_array($input, $this->inputTypes);
   }
