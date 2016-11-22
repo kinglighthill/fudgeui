@@ -55,5 +55,19 @@ class HTMLObjectTest extends PHPunit_Framework_Testcase {
       $obj->setAttribute("href", "world");
       $this->assertEquals("world", $obj->getAttribute("href"));
     }
+    function testHTMLObjectInheritanceOnAttributes() {
+      $div = new DIV("id");
+      $div->setAttribute("name", "hello");
+      $div->setAttribute("title", "world");
+      $div->setAttribute("newAttribute", "newValue");
+      $log = new VLogger("test_logs.txt");
+      $log->log($div->getView());
+      $result = preg_match("/<div id=\"id\"/", $div->getView()) == 1;
+      $this->assertTrue($result);
+      $result = preg_match("/newAttribute=\"newValue\"/", $div->getView()) == 1;
+      $this->assertTrue($result);
+      $result = preg_match("/<div title=\"world\"/", $div->getView()) == 0;
+      $this->assertTrue($result);
+    }
 }
 ?>

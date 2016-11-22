@@ -1,5 +1,19 @@
 <?php
 /**
+ * constants
+ */
+define("Version", "0.1");
+/**
+ * CLass fo rvalidating HTML attributes, input types, etc.
+ */
+class HTMLValidator {
+  private $inputTypes = array("text", "file", "password", "submit",
+                              "reset", "checkbox");
+  function validInput($input) {
+    return in_array($input, $this->inputTypes);
+  }
+}
+/**
  * Fundamental HTML Page Class
  */
 class HTMLPage {
@@ -191,6 +205,7 @@ class HTMLObject {
     protected $body = array(); // The array that conatians html objects that children of the current html object
     protected $title; // popup text.
     protected $attributesString; // a string containing all attribute value pair.
+    private $iAttributes = array("id", "title", "class", "style"); // Implemented HTML attributes.
     function __construct($id) {
         $id = str_replace(" ", "", $id);
         $this->id = $id;
@@ -289,18 +304,20 @@ class HTMLObject {
      * @param [string] $val [attribute value.]
      */
     function setAttribute($att, $val) {
-      $buffer = $this->attribute($att, $val);
-      if (strpos($this->attributesString, $att) != false) {
-        $attArray = explode(" ", $this->attributesString);
-        for ($x = 0; $x < count ($attArray); $x++) {
-          if (preg_match("/$att/", $attArray[$x])) {
-            $attArray[$x] = $buffer;
-            $this->attributesString = implode(" ", $attArray);
-            break;
+      if (!in_array($att, $this->iAttributes)) {
+        $buffer = $this->attribute($att, $val);
+        if (strpos($this->attributesString, $att) != false) {
+          $attArray = explode(" ", $this->attributesString);
+          for ($x = 0; $x < count ($attArray); $x++) {
+            if (preg_match("/$att/", $attArray[$x])) {
+              $attArray[$x] = $buffer;
+              $this->attributesString = implode(" ", $attArray);
+              break;
+            }
           }
+        } else {
+          $this->attributesString .= $buffer;
         }
-      } else {
-        $this->attributesString .= $buffer;
       }
     }
     /**
@@ -365,6 +382,7 @@ class DIV extends HTMLObject {
       $html .= $this->attribute("id", $this->id);
       $html .= $this->attribute("class", $this->getClassString());
       $html .= $this->attribute("style", $this->style);
+      $html .= $this->attribute("title", $this->title);
       $html .= $this->attributesString;
       $html .= ">" . PHP_EOL;
       if (count($this->body) > 0) {
@@ -385,6 +403,7 @@ class P extends HTMLObject {
     $html .= $this->attribute("id", $this->id);
     $html .= $this->attribute("class", $this->getClassString());
     $html .= $this->attribute("style", $this->style);
+    $html .= $this->attribute("title", $this->title);
     $html .= $this->attributesString;
     $html .= ">";
     $c = count($this->body);
@@ -414,4 +433,46 @@ class P extends HTMLObject {
     return $html;
   }
 }
+/**
+ * Form tag HTML
+ */
+class Form extends HTMLObject {
+  private $method = "get"; // form method.
+  private $action;// for action.
+  /**
+   * [useGET sets the html form method attribute to get]
+   * @return [null]
+   */
+  function useGET() {
+    $this->method = "get";
+  }
+  /**
+   * [usePost sets the forms method attribute to post]
+   * @return [null]
+   */
+  function usePost(){
+    $this->method = "post";
+  }
+  /**
+   * [setAction sets the action attribute of the html form.]
+   * @param [string] $action [url of the remote script to submit the form values to.]
+   */
+  function setAction($action) {
+    $this->action = $action;
+  }
+  /**
+   * [addInput adds a html input to the form body.]
+   * @param [string] $placeholder [the default semi-transparent text to be
+   *                              displayed inside of the input.]
+   * @param [string] $name  [name to associate with the input; this will be the
+   *                      key in the $_GET[] associative array on the php side.]
+   * @param [string] $type  [html input type]
+   */
+  function addInput($placeholder, $name, $type) {
+
+  }
+}
+//--section-start-- {Section for html input items}
+//--section-end--
+
 ?>
