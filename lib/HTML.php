@@ -476,6 +476,9 @@ class Form extends HTMLObject {
   }
 }
 //--section-start-- {Section for html input items}
+class FormInput {
+  private $name;
+}
 //--section-end--
 
 ?>
