@@ -4,7 +4,7 @@
  */
 define("Version", "0.1");
 /**
- * CLass fo rvalidating HTML attributes, input types, etc.
+ * CLass for validating HTML attributes, input types, etc.
  */
 class HTMLValidator {
   private $inputTypes = array("text", "file", "password", "submit",
