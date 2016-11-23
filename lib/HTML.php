@@ -12,7 +12,12 @@ class HTMLValidator {
                               "date", "color", "range", "month","week",
                               "time", "datetime-local", "email", "search",
                               "tel", "url");
-  function validInput($input) {
+/**
+ * [validInputType checks if the provided input type is a valid html input type.]
+ * @param  [string] $input [html input type]
+ * @return [boolean]        [true if valid, false if not valid]
+ */
+  function validInputType($input) {
     return in_array($input, $this->inputTypes);
   }
 }
@@ -490,6 +495,7 @@ class FormInput {
   protected $attributesString; // a string containing all attribute value pair.
   protected $placeholder; // value for the placeholder attribute.
   protected $type; // Input type.
+  protected $validator; // The HTML Validator Object.
   private $iAttributes = array("id", "title", "class", "style"); // implemented attributes
   /**
    * [__construct constructor]
@@ -497,6 +503,7 @@ class FormInput {
    */
   function __construct($name) {
     $this->keyName = $name;
+    $this->validator = new  HTMLValidator();
   }
   /**
    * [setPopUpText sets the title attribute of the html tag]
@@ -517,7 +524,9 @@ class FormInput {
    * @param [string] $type [input type]
    */
   function setType($type) {
-    $this->type = $type;
+    if ($this->validator->validInputType($type)) {
+      $this->type = $type;  
+    }
   }
   /**
    * [addCSSRule adds a css rule to the style attribute]
@@ -631,5 +640,4 @@ class FormInput {
   }
 }
 //--section-end--
-
 ?>
