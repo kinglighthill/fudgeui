@@ -525,7 +525,7 @@ class FormInput {
    */
   function setType($type) {
     if ($this->validator->validInputType($type)) {
-      $this->type = $type;  
+      $this->type = $type;
     }
   }
   /**
@@ -637,6 +637,14 @@ class FormInput {
       }
     }
     return "";
+  }
+}
+class TextInput {
+  /**
+   * [__construct description]
+   */
+  function __construct() {
+
   }
 }
 //--section-end--
