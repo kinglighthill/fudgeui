@@ -505,10 +505,25 @@ class FormInput extends HTMLObject {
    * [__construct constructor]
    * @param [string] $name [value of the name tag of the html input]
    */
-  function __construct($name) {
-    $this->keyName = $name;
+  function __construct($id) {
+    $this->id = id;
     $this->name = "input";
     $this->validator = new  HTMLValidator();
+  }
+  /**
+   * [setName sets the name of the html input tag; necessary if you are gount to
+   * submit the form via submit action. this uniquely identifies the form values]
+   * @param [string] $name [value of the name tag]
+   */
+  function setName($name) {
+    $this->keyName = $name;
+  }
+  /**
+   * [getName get the value of the name tag]
+   * @return [string] [value of the name tag]
+   */
+  function getName() {
+    return $this->keyName;
   }
   /**
    * [setType sets the input type of the tag]
