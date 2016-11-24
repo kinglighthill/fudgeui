@@ -4,7 +4,7 @@
  */
 define("Version", "0.1");
 /**
- * CLass fo rvalidating HTML attributes, input types, etc.
+ * CLass for validating HTML attributes, input types, etc.
  */
 class HTMLValidator {
   private $inputTypes = array("text", "file", "password", "submit",
@@ -236,6 +236,7 @@ class HTMLObject {
         $this->style .= "$property:$val;";
       }
     }
+    // TODO: make this able to add multiple css rules with one function passing it an array.
     /**
      * [getCSSRules gets all set css rules for the html object. (equvalent of
      *              all rules in style attribute)]
@@ -406,6 +407,17 @@ class DIV extends HTMLObject {
  * P tag (HTML)
  */
 class P extends HTMLObject {
+  /**
+   * [__construct initializes the P object with its content]
+   * @param [html|string] $body [the content of the p object]
+   */
+  function __construct($body) {
+    $this->body[] = $body;
+  }
+  /**
+   * [getView renders the P object's html]
+   * @return [string] [html representation of the object]
+   */
   function getView() {
     $html = "<p";
     $html .= $this->attribute("id", $this->id);
@@ -484,40 +496,19 @@ class Form extends HTMLObject {
 /**
  * Base Class for HTML form inputs.
  */
-class FormInput {
+class FormInput extends HTMLObject {
   private $keyName; // value of the name attribute.
-  protected $id; // id of the form input tag.
-  protected $_class; // css classes of the form input
-  protected $name = "input"; // html tag name.
-  protected $style; // variable for the style attribute.
-  protected $body = array(); // The array that conatians html objects that children of the current html object (if any)
-  protected $title; // popup text.
-  protected $attributesString; // a string containing all attribute value pair.
   protected $placeholder; // value for the placeholder attribute.
   protected $type; // Input type.
   protected $validator; // The HTML Validator Object.
-  private $iAttributes = array("id", "title", "class", "style"); // implemented attributes
   /**
    * [__construct constructor]
    * @param [string] $name [value of the name tag of the html input]
    */
   function __construct($name) {
     $this->keyName = $name;
+    $this->name = "input";
     $this->validator = new  HTMLValidator();
-  }
-  /**
-   * [setPopUpText sets the title attribute of the html tag]
-   * @param [string] $popup [the value of the title attribute]
-   */
-  function setPopUpText($popup) {
-    $this->title = $popup;
-  }
-  /**
-   * [setId sets the id of the input tag]
-   * @param [string] $id [unique id]
-   */
-  function setId($id) {
-    $this->id = $id;
   }
   /**
    * [setType sets the input type of the tag]
@@ -529,117 +520,17 @@ class FormInput {
     }
   }
   /**
-   * [addCSSRule adds a css rule to the style attribute]
-   * @param [type] $property [css property]
-   * @param [type] $val      [css value]
+   * [getType returns for input type]
+   * @return [type] [empty string if not set or a vild html input type if set.]
    */
-  function addCSSRule($property, $val) {
-    if ($property != "" && $val != "") {
-      $this->style .= "$property:$val;";
-    }
-  }
-  /**
-   * [getCSSRules gets all set css rules for the html object. (equvalent of
-   *              all rules in style attribute)]
-   * @return [string] [css rules]
-   */
-  function getCSSRules() {
-    return $this->style;
-  }
-  /**
-   * [setCSSRuleString sets the style attribute]
-   * @param [string] $style [css rules]
-   */
-  function setCSSRuleString($style) {
-    $this->style = $style;
-  }
-  /**
-   * [addClass adds/appends a class to the class attribute]
-   * @param [string] $class [css class]
-   */
-  function addClass($class) {
-      $this->_class .= $class . " ";
-  }
-  /**
-   * [removeClass removes the specified class from the class attribute]
-   * @param  [type] $class [class to remove]
-   * @return [null]
-   */
-  function removeClass($class) {
-      if ($class == "") {
-          $this->_class = "";
-      } else {
-          $this->_class = str_replace($class, "", $this->_class);
-      }
-  }
-  /**
-   * [hasClass checks existence of the specified class in the class attribute]
-   * @param  [type]  $class [css class to check if exists]
-   * @return boolean        [true if class exists, flase if not exists]
-   */
-  function hasClass($class) {
-      return (strpos("*" . $this->_class, $class) != false);
-  }
-  /**
-   * [getClassString gets the value of the class attribute]
-   * @return [string] [space seperated css classes]
-   */
-  function getClassString() {
-      return trim($this->_class);
-  }
-  /**
-   * [getID gets the id of the html element]
-   * @return [string] [id string]
-   */
-  function getID() {
-      return $this->id;
-  }
-  /**
-   * [getTagName gets the tag name of the html tag]
-   * @return [string] [html tag name]
-   */
-  function getTagName() {
-      return $this->name;
-  }
-  /**
-   * [setAttribute sets attributes of the html object.]
-   * @param [string] $att [attribute name.]
-   * @param [string] $val [attribute value.]
-   */
-  function setAttribute($att, $val) {
-    if (!in_array($att, $this->iAttributes)) {
-      $buffer = $this->attribute($att, $val);
-      if (strpos($this->attributesString, $att) != false) {
-        $attArray = explode(" ", $this->attributesString);
-        for ($x = 0; $x < count ($attArray); $x++) {
-          if (preg_match("/$att/", $attArray[$x])) {
-            $attArray[$x] = $buffer;
-            $this->attributesString = implode(" ", $attArray);
-            break;
-          }
-        }
-      } else {
-        $this->attributesString .= $buffer;
-      }
-    }
-  }
-  /**
-   * [getAttribute gets the value of the specified attribute]
-   * @param  [string] $att [attribute]
-   * @return [string]      [value of the specified attribute, empty string if value is unset]
-   */
-  function getAttribute($att) {
-    $attArray = explode(" ", $this->attributesString);
-    for ($x = 0; $x < count ($attArray); $x++) {
-      if (preg_match("/$att/", $attArray[$x])) {
-        $val = substr(substr($attArray[$x], strpos($attArray[$x], "=") + 1), 1);
-        return substr($val, 0, strlen($val) - 1);
-      }
-    }
-    return "";
+  function getType() {
+    return $this->type;
   }
 }
 class TextInput {
+  /**
+   * [__construct description]
+   */
   function __construct() {
 
   }
