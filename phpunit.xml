@@ -6,6 +6,8 @@
       <file>tests/html_object_test.php</file>
       <file>tests/div_test.php</file>
       <file>tests/p_test.php</file>
+      <file>tests/form_test.php</file>
+      <file>tests/form_input_test.php</file>
     </testsuite>
   </testsuites>
 </phpunit>
