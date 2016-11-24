@@ -640,9 +640,6 @@ class FormInput {
   }
 }
 class TextInput {
-  /**
-   * [__construct description]
-   */
   function __construct() {
 
   }
