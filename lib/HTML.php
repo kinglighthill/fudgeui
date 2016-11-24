@@ -406,6 +406,17 @@ class DIV extends HTMLObject {
  * P tag (HTML)
  */
 class P extends HTMLObject {
+  /**
+   * [__construct initializes the P object with its content]
+   * @param [html|string] $body [the content of the p object]
+   */
+  function __construct($body) {
+    $this->body[] = $body;
+  }
+  /**
+   * [getView renders the P object's html]
+   * @return [string] [html representation of the object]
+   */
   function getView() {
     $html = "<p";
     $html .= $this->attribute("id", $this->id);
@@ -529,15 +540,23 @@ class FormInput {
     }
   }
   /**
+   * [getType returns for input type]
+   * @return [type] [empty string if not set or a vild html input type if set.]
+   */
+  function getType() {
+    return $this->type;
+  }
+  /**
    * [addCSSRule adds a css rule to the style attribute]
-   * @param [type] $property [css property]
-   * @param [type] $val      [css value]
+   * @param [string] $property [css property]
+   * @param [string] $val      [css value]
    */
   function addCSSRule($property, $val) {
     if ($property != "" && $val != "") {
       $this->style .= "$property:$val;";
     }
   }
+  // TODO: make this able to add multiple css rules with one function passing it an array.
   /**
    * [getCSSRules gets all set css rules for the html object. (equvalent of
    *              all rules in style attribute)]
