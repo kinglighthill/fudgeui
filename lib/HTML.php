@@ -506,7 +506,7 @@ class FormInput extends HTMLObject {
    * @param [string] $name [value of the name tag of the html input]
    */
   function __construct($id) {
-    $this->id = id;
+    $this->id = $id;
     $this->name = "input";
     $this->validator = new  HTMLValidator();
   }
