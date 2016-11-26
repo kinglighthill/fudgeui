@@ -230,46 +230,39 @@ class HTMLObject {
       >3 Letters - First Cap.
       */
 }
-/**
- * [addCSSRule adds a css rule to the style attribute]
- * @param [type] $property [css property]
- * @param [type] $val      [css value]
- */
-function addCSSRule($property, $val) {
-  if ($property != "" && $val != "") {
-    $this->style .= "$property:$val;";
-  }
-}
-// TODO: make this able to add multiple css rules with one function passing it an array.
-/**
- * [getCSSRules gets all set css rules for the html object. (equvalent of
- *              all rules in style attribute)]
- * @return [string] [css rules]
- */
-function getCSSRules() {
-  return $this->style;
-}
-/**
- * [setCSSRuleString sets the style attribute]
- * @param [string] $style [css rules]
- */
-function setCSSRuleString($style) {
-  $this->style = $style;
-}
-/**
- * [addClass adds/appends a class to the class attribute]
- * @param [string] $class [css class]
- */
-function addClass($class) {
-    $this->_class .= $class . " ";
-}
-/**
- * [getChildCount returns the number of child objects it contains]
- * @return [type] [number of child objects]
- */
-function getChildCount() {
-  return count($this->body);
-}
+    /**
+     * [addCSSRule adds a css rule to the style attribute]
+     * @param [type] $property [css property]
+     * @param [type] $val      [css value]
+     */
+    function addCSSRule($property, $val) {
+      if ($property != "" && $val != "") {
+        $this->style .= "$property:$val;";
+      }
+    }
+    // TODO: make this able to add multiple css rules with one function passing it an array.
+    /**
+     * [getCSSRules gets all set css rules for the html object. (equvalent of
+     *              all rules in style attribute)]
+     * @return [string] [css rules]
+     */
+    function getCSSRules() {
+      return $this->style;
+    }
+    /**
+     * [setCSSRuleString sets the style attribute]
+     * @param [string] $style [css rules]
+     */
+    function setCSSRuleString($style) {
+      $this->style = $style;
+    }
+    /**
+     * [addClass adds/appends a class to the class attribute]
+     * @param [string] $class [css class]
+     */
+    function addClass($class) {
+        $this->_class .= $class . " ";
+    }
     /**
      * [removeClass removes the specified class from the class attribute]
      * @param  [type] $class [class to remove]
@@ -546,9 +539,8 @@ class FormInput extends HTMLObject {
     }
   }
   /**
-   * [getType returns the value of the type attribute of the input tag. in other
-   * words, get s the input type]
-   * @return [string] [input type]
+   * [getType returns for input type]
+   * @return [type] [empty string if not set or a vild html input type if set.]
    */
   function getType() {
     return $this->type;
