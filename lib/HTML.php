@@ -182,7 +182,7 @@ class HTMLContainer {
      * @return [null]
      */
     function appendChild($htmlObject) {
-        if (method_exists($htmlObject, "getTagName") && method_exists($htmlObject, "getView") && get_class($htmlObject) != "Tag"){
+        if (method_exists($htmlObject, "getTagName") && method_exists($htmlObject, "getView") && get_class($htmlObject) != "HTMLObject"){
             $this->contents[] = $htmlObject;
         }
     }
@@ -214,18 +214,22 @@ class HTMLObject {
     protected $title; // popup text.
     protected $attributesString; // a string containing all attribute value pair.
     private $iAttributes = array("id", "title", "class", "style"); // Implemented HTML attributes.
-    function __construct($id) {
-        $id = str_replace(" ", "", $id);
-        $this->id = $id;
-        $this->name = strtolower(get_class($this)); // Sets Tag object Name.
-        /*
-        The classes that extend the Tag class must have the same name as the corresponding html tag
-        being implemented  by the object. (case insensitive but should be neat and uniform).
-        Tag Class names follow the rules below.
-        3 letters - All Caps.
-        >3 Letters - First Cap.
-        */
-    }
+    function __construct() {
+      $id = func_get_arg(0);
+      if (func_num_args() > 1) {
+        $this->appendChild(func_get_arg(1));
+      }
+      $id = str_replace(" ", "", $id);
+      $this->id = $id;
+      $this->name = strtolower(get_class($this)); // Sets Tag object Name.
+      /*
+      The classes that extend the Tag class must have the same name as the corresponding html tag
+      being implemented  by the object. (case insensitive but should be neat and uniform).
+      Tag Class names follow the rules below.
+      3 letters - All Caps.
+      >3 Letters - First Cap.
+      */
+}
     /**
      * [addCSSRule adds a css rule to the style attribute]
      * @param [type] $property [css property]
@@ -236,6 +240,7 @@ class HTMLObject {
         $this->style .= "$property:$val;";
       }
     }
+    // TODO: make this able to add multiple css rules with one function passing it an array.
     /**
      * [getCSSRules gets all set css rules for the html object. (equvalent of
      *              all rules in style attribute)]
@@ -364,7 +369,7 @@ class HTMLObject {
      * @return [null]
      */
     function appendChild($child) {
-      if (get_parent_class($child) == "Tag" || get_parent_class($child) == "FormInput") {
+      if (get_parent_class($child) == "HTMLObject" || get_parent_class($child) == "FormInput") {
         $this->body[] = $child;
       }
     }
@@ -395,10 +400,10 @@ class DIV extends HTMLObject {
       $html .= ">" . PHP_EOL;
       if (count($this->body) > 0) {
         for ($x = 0; $x < count($this->body); $x++) {
-          $html .= $this->body[$x]->getView() . PHP_EOL;
+          $html .= $this->body[$x]->getView();
         }
       }
-      $html = trim($html) . PHP_EOL . "</div>" . PHP_EOL;
+      $html .= "</div>" . PHP_EOL;
       return $html;
     }
 }
@@ -495,40 +500,34 @@ class Form extends HTMLObject {
 /**
  * Base Class for HTML form inputs.
  */
-class FormInput {
+class FormInput extends HTMLObject {
   private $keyName; // value of the name attribute.
-  protected $id; // id of the form input tag.
-  protected $_class; // css classes of the form input
-  protected $name = "input"; // html tag name.
-  protected $style; // variable for the style attribute.
-  protected $body = array(); // The array that conatians html objects that children of the current html object (if any)
-  protected $title; // popup text.
-  protected $attributesString; // a string containing all attribute value pair.
   protected $placeholder; // value for the placeholder attribute.
   protected $type; // Input type.
   protected $validator; // The HTML Validator Object.
-  private $iAttributes = array("id", "title", "class", "style"); // implemented attributes
   /**
    * [__construct constructor]
    * @param [string] $name [value of the name tag of the html input]
    */
-  function __construct($name) {
-    $this->keyName = $name;
+  function __construct($id) {
+    $this->id = $id;
+    $this->name = "input";
     $this->validator = new  HTMLValidator();
   }
   /**
-   * [setPopUpText sets the title attribute of the html tag]
-   * @param [string] $popup [the value of the title attribute]
+   * [setName sets the name of the html input tag; necessary if you are gount to
+   * submit the form via submit action. this uniquely identifies the form values]
+   * @param [string] $name [value of the name tag]
    */
-  function setPopUpText($popup) {
-    $this->title = $popup;
+  function setName($name) {
+    $this->keyName = $name;
   }
   /**
-   * [setId sets the id of the input tag]
-   * @param [string] $id [unique id]
+   * [getName get the value of the name tag]
+   * @return [string] [value of the name tag]
    */
-  function setId($id) {
-    $this->id = $id;
+  function getName() {
+    return $this->keyName;
   }
   /**
    * [setType sets the input type of the tag]
@@ -542,6 +541,7 @@ class FormInput {
   /**
    * [getType returns for input type]
    * @return [type] [empty string if not set or a vild html input type if set.]
+<<<<<<< HEAD
    */
   function getType() {
     return $this->type;
@@ -575,87 +575,11 @@ class FormInput {
   /**
    * [addClass adds/appends a class to the class attribute]
    * @param [string] $class [css class]
+=======
+>>>>>>> html-input-types
    */
-  function addClass($class) {
-      $this->_class .= $class . " ";
-  }
-  /**
-   * [removeClass removes the specified class from the class attribute]
-   * @param  [type] $class [class to remove]
-   * @return [null]
-   */
-  function removeClass($class) {
-      if ($class == "") {
-          $this->_class = "";
-      } else {
-          $this->_class = str_replace($class, "", $this->_class);
-      }
-  }
-  /**
-   * [hasClass checks existence of the specified class in the class attribute]
-   * @param  [type]  $class [css class to check if exists]
-   * @return boolean        [true if class exists, flase if not exists]
-   */
-  function hasClass($class) {
-      return (strpos("*" . $this->_class, $class) != false);
-  }
-  /**
-   * [getClassString gets the value of the class attribute]
-   * @return [string] [space seperated css classes]
-   */
-  function getClassString() {
-      return trim($this->_class);
-  }
-  /**
-   * [getID gets the id of the html element]
-   * @return [string] [id string]
-   */
-  function getID() {
-      return $this->id;
-  }
-  /**
-   * [getTagName gets the tag name of the html tag]
-   * @return [string] [html tag name]
-   */
-  function getTagName() {
-      return $this->name;
-  }
-  /**
-   * [setAttribute sets attributes of the html object.]
-   * @param [string] $att [attribute name.]
-   * @param [string] $val [attribute value.]
-   */
-  function setAttribute($att, $val) {
-    if (!in_array($att, $this->iAttributes)) {
-      $buffer = $this->attribute($att, $val);
-      if (strpos($this->attributesString, $att) != false) {
-        $attArray = explode(" ", $this->attributesString);
-        for ($x = 0; $x < count ($attArray); $x++) {
-          if (preg_match("/$att/", $attArray[$x])) {
-            $attArray[$x] = $buffer;
-            $this->attributesString = implode(" ", $attArray);
-            break;
-          }
-        }
-      } else {
-        $this->attributesString .= $buffer;
-      }
-    }
-  }
-  /**
-   * [getAttribute gets the value of the specified attribute]
-   * @param  [string] $att [attribute]
-   * @return [string]      [value of the specified attribute, empty string if value is unset]
-   */
-  function getAttribute($att) {
-    $attArray = explode(" ", $this->attributesString);
-    for ($x = 0; $x < count ($attArray); $x++) {
-      if (preg_match("/$att/", $attArray[$x])) {
-        $val = substr(substr($attArray[$x], strpos($attArray[$x], "=") + 1), 1);
-        return substr($val, 0, strlen($val) - 1);
-      }
-    }
-    return "";
+  function getType() {
+    return $this->type;
   }
 }
 class TextInput {
@@ -663,7 +587,6 @@ class TextInput {
    * [__construct description]
    */
   function __construct() {
-
   }
 }
 //--section-end--
