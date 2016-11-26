@@ -415,8 +415,19 @@ class P extends HTMLObject {
    * [__construct initializes the P object with its content]
    * @param [html|string] $body [the content of the p object]
    */
-  function __construct($body) {
-    $this->body[] = $body;
+  function __construct() {
+    $a = func_num_args();
+    switch ($a) {
+      case 0:
+        break;
+      case 1:
+        $this->body[] = func_get_arg(0);
+        break;
+      case 2:
+        $this->id = func_get_arg(0);
+        $this->body[] = func_get_arg(1);
+        break;
+    }
   }
   /**
    * [getView renders the P object's html]
