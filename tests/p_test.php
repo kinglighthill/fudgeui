@@ -5,10 +5,9 @@ class PTest extends PHPunit_Framework_Testcase {
     $this->logger = new VLogger("test_logs.txt");
   }
   function testPBody() {
-    $p = new P("id");
-    $p->setChild("Hello Madagascar");
+    $p = new P("Hello Madagascar");
     $this->logger->log($p->getView());
-    $this->assertEquals("<p id=\"id\">Hello Madagascar</p>" . PHP_EOL, $p->getView());
+    $this->assertEquals("<p>Hello Madagascar</p>" . PHP_EOL, $p->getView());
   }
 }
 ?>

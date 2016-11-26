@@ -12,8 +12,6 @@ class FormInputTest extends PHPunit_Framework_Testcase {
     $input->setType("yolo");
     $this->assertEquals("date", $input->getType());
   }
-<<<<<<< HEAD
-=======
   function testFormInputConstructor() {
       $input = new FormInput("id");
       $this->assertEquals("id", $input->getID());
@@ -69,6 +67,5 @@ class FormInputTest extends PHPunit_Framework_Testcase {
     $input->setAttribute("href", "world");
     $this->assertEquals("world", $input->getAttribute("href"));
   }
->>>>>>> html-input-types
 }
 ?>
