@@ -9,7 +9,10 @@ class FormInputTest extends PHPunit_Framework_Testcase {
     $input = new FormInput("name");
     $input->setType("date");
     $this->assertEquals("date", $input->getType());
-    $input->setType("yolo");
+    try {
+      $input->setType("yolo");
+    } catch (InvalidInputTypeException $e) {
+    }
     $this->assertEquals("date", $input->getType());
   }
   function testFormInputConstructor() {
