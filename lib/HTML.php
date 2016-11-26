@@ -215,12 +215,18 @@ class HTMLObject {
     protected $attributesString; // a string containing all attribute value pair.
     private $iAttributes = array("id", "title", "class", "style"); // Implemented HTML attributes.
     function __construct() {
-      $id = func_get_arg(0);
-      if (func_num_args() > 1) {
-        $this->appendChild(func_get_arg(1));
+      $a = func_num_args();
+      switch ($a) {
+        case 0:
+          break;
+        case 1:
+          $id = str_replace(" ", "", $id);
+          $this->id = $id;
+          break;
+        case 2:
+          $this->appendChild(func_get_arg(1));
+          break;
       }
-      $id = str_replace(" ", "", $id);
-      $this->id = $id;
       $this->name = strtolower(get_class($this)); // Sets Tag object Name.
       /*
       The classes that extend the Tag class must have the same name as the corresponding html tag
@@ -229,7 +235,7 @@ class HTMLObject {
       3 letters - All Caps.
       >3 Letters - First Cap.
       */
-}
+    }
     /**
      * [addCSSRule adds a css rule to the style attribute]
      * @param [type] $property [css property]
