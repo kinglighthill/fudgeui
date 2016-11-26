@@ -182,7 +182,7 @@ class HTMLContainer {
      * @return [null]
      */
     function appendChild($htmlObject) {
-        if (method_exists($htmlObject, "getTagName") && method_exists($htmlObject, "getView") && get_class($htmlObject) != "Tag"){
+        if (method_exists($htmlObject, "getTagName") && method_exists($htmlObject, "getView") && get_class($htmlObject) != "HTMLObject"){
             $this->contents[] = $htmlObject;
         }
     }
@@ -214,18 +214,22 @@ class HTMLObject {
     protected $title; // popup text.
     protected $attributesString; // a string containing all attribute value pair.
     private $iAttributes = array("id", "title", "class", "style"); // Implemented HTML attributes.
-    function __construct($id) {
-        $id = str_replace(" ", "", $id);
-        $this->id = $id;
-        $this->name = strtolower(get_class($this)); // Sets Tag object Name.
-        /*
-        The classes that extend the Tag class must have the same name as the corresponding html tag
-        being implemented  by the object. (case insensitive but should be neat and uniform).
-        Tag Class names follow the rules below.
-        3 letters - All Caps.
-        >3 Letters - First Cap.
-        */
-    }
+    function __construct() {
+      $id = func_get_arg(0);
+      if (func_num_args() > 1) {
+        $this->appendChild(func_get_arg(1));
+      }
+      $id = str_replace(" ", "", $id);
+      $this->id = $id;
+      $this->name = strtolower(get_class($this)); // Sets Tag object Name.
+      /*
+      The classes that extend the Tag class must have the same name as the corresponding html tag
+      being implemented  by the object. (case insensitive but should be neat and uniform).
+      Tag Class names follow the rules below.
+      3 letters - All Caps.
+      >3 Letters - First Cap.
+      */
+}
     /**
      * [addCSSRule adds a css rule to the style attribute]
      * @param [type] $property [css property]
@@ -365,7 +369,7 @@ class HTMLObject {
      * @return [null]
      */
     function appendChild($child) {
-      if (get_parent_class($child) == "Tag" || get_parent_class($child) == "FormInput") {
+      if (get_parent_class($child) == "HTMLObject" || get_parent_class($child) == "FormInput") {
         $this->body[] = $child;
       }
     }
@@ -396,10 +400,10 @@ class DIV extends HTMLObject {
       $html .= ">" . PHP_EOL;
       if (count($this->body) > 0) {
         for ($x = 0; $x < count($this->body); $x++) {
-          $html .= $this->body[$x]->getView() . PHP_EOL;
+          $html .= $this->body[$x]->getView();
         }
       }
-      $html = trim($html) . PHP_EOL . "</div>" . PHP_EOL;
+      $html .= "</div>" . PHP_EOL;
       return $html;
     }
 }
@@ -547,7 +551,6 @@ class TextInput {
    * [__construct description]
    */
   function __construct() {
-
   }
 }
 //--section-end--

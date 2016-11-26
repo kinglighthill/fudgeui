@@ -60,14 +60,24 @@ class HTMLObjectTest extends PHPunit_Framework_Testcase {
       $div->setAttribute("name", "hello");
       $div->setAttribute("title", "world");
       $div->setAttribute("newAttribute", "newValue");
-      $log = new VLogger("test_logs.txt");
-      $log->log($div->getView());
       $result = preg_match("/<div id=\"id\"/", $div->getView()) == 1;
       $this->assertTrue($result);
       $result = preg_match("/newAttribute=\"newValue\"/", $div->getView()) == 1;
       $this->assertTrue($result);
       $result = preg_match("/<div title=\"world\"/", $div->getView()) == 0;
       $this->assertTrue($result);
+    }
+    function testHTMLObjectAppendChild() {
+      $div = new DIV("id");
+      $div2 = new DIV("id3");
+      $div->appendChild($div2);
+      $p = new P("otg");
+      $div->appendChild($p);
+      $html = $div->getView();
+      $result = preg_match("/<div id=\"id3\"/", $html);
+      $this->assertEquals(1, $result);
+      $result = preg_match("/<p>otg<\/p>/", $html);
+      $this->assertEquals(1, $result);
     }
 }
 ?>
