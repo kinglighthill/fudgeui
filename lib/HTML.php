@@ -194,8 +194,9 @@ class HTMLObject {
     protected $style; // variable for the style attribute.
     protected $body = array(); // The array that conatians html objects that children of the current html object
     protected $title; // popup text.
+    protected $onclick;
     protected $attributesString; // a string containing all attribute value pair.
-    private $iAttributes = array("id", "title", "class", "style"); // Implemented HTML attributes.
+    private $iAttributes = array("id", "title", "class", "style", "onclick"); // Implemented HTML attributes.
     function __construct() {
       $a = func_num_args();
       switch ($a) {
@@ -236,6 +237,22 @@ class HTMLObject {
      */
     function getCSSRules() {
       return $this->style;
+    }
+    function setOnClick() {
+      $a = func_num_args();
+      switch ($a) {
+        case 0:
+          throw new InvalidArgsException("Empty Arg");
+        case 1:
+          $this->onclick = str_replace("\"", "'", func_get_arg(0));
+          break;
+        case 3:
+          if (preg_match("/i/", func_get_arg(2)) == 1) {
+            //TODO: onclic attribute value function formatting here.
+          }
+        default:
+          throw new InvalidArgsException(func_get_arg(1));
+      }
     }
     /**
      * [setCSSRuleString sets the style attribute]
@@ -384,6 +401,7 @@ class DIV extends HTMLObject {
       $html .= $this->attribute("class", $this->getClassString());
       $html .= $this->attribute("style", $this->style);
       $html .= $this->attribute("title", $this->title);
+      $html .= $this->attribute("onclick", $this->onclick);
       $html .= $this->attributesString;
       $html .= ">" . PHP_EOL;
       if (count($this->body) > 0) {
@@ -427,6 +445,7 @@ class P extends HTMLObject {
     $html .= $this->attribute("class", $this->getClassString());
     $html .= $this->attribute("style", $this->style);
     $html .= $this->attribute("title", $this->title);
+    $html .= $this->attribute("onclick", $this->onclick);
     $html .= $this->attributesString;
     $html .= ">";
     $c = count($this->body);
