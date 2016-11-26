@@ -4,24 +4,6 @@
  */
 define("Version", "0.1");
 /**
- * CLass for validating HTML attributes, input types, etc.
- */
-class HTMLValidator {
-  private $inputTypes = array("text", "file", "password", "submit",
-                              "reset", "checkbox", "button", "number",
-                              "date", "color", "range", "month","week",
-                              "time", "datetime-local", "email", "search",
-                              "tel", "url");
-/**
- * [validInputType checks if the provided input type is a valid html input type.]
- * @param  [string] $input [html input type]
- * @return [boolean]        [true if valid, false if not valid]
- */
-  function validInputType($input) {
-    return in_array($input, $this->inputTypes);
-  }
-}
-/**
  * Fundamental HTML Page Class
  */
 class HTMLPage {
@@ -529,7 +511,7 @@ class FormInput extends HTMLObject {
   function __construct($id) {
     $this->id = $id;
     $this->name = "input";
-    $this->validator = new  HTMLValidator();
+    //$this->validator = new  HTMLValidator();
   }
   /**
    * [setName sets the name of the html input tag; necessary if you are gount to
@@ -551,8 +533,10 @@ class FormInput extends HTMLObject {
    * @param [string] $type [input type]
    */
   function setType($type) {
-    if ($this->validator->validInputType($type)) {
+    if (HTMLValidator::validInputType($type)) {
       $this->type = $type;
+    } else {
+      throw new InvalidInputTypeException($type);
     }
   }
   /**
