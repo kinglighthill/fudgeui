@@ -26,4 +26,17 @@ class HTMLRef {
                  "time", "datetime-local", "email", "search", "tel", "url");
   }
 }
+class String {
+  static function startsWith($needle, $haystack) {
+     $length = strlen($needle);
+     return (substr($haystack, 0, $length) === $needle);
+}
+  static function endsWith($needle, $haystack) {
+    $length = strlen($needle);
+    if ($length == 0) {
+        return true;
+    }
+    return (substr($haystack, -$length) === $needle);
+  }
+}
 ?>
