@@ -238,18 +238,52 @@ class HTMLObject {
     function getCSSRules() {
       return $this->style;
     }
+    /**
+     * [setOnClick sets the javascript code that fires when this object is clicked
+     * on client side.]
+     * **overloaded**
+     * {
+     * @param [string] $function [the javascript function.]
+     * }
+     * {
+     * @param [string] $functionName [the name of the javascript function to call without
+     *                               parenthesis.]
+     * @param [{(string|int) array}] $arg [function's argument(s).]
+     * }
+     */
     function setOnClick() {
       $a = func_num_args();
       switch ($a) {
         case 0:
           throw new InvalidArgsException("Empty Arg");
         case 1:
-          $this->onclick = str_replace("\"", "'", func_get_arg(0));
-          break;
-        case 3:
-          if (preg_match("/i/", func_get_arg(2)) == 1) {
-            //TODO: onclic attribute value function formatting here.
+          $onclick = str_replace("\"", "'", func_get_arg(0));
+          if (!String::endsWith(";", $onclick)) {
+            $onclick .= ";";
           }
+          $this->onclick = $onclick;
+          break;
+        case 2:
+          $onclick = func_get_arg(0) . "("; // function name.
+          $funtionArgs = func_get_arg(1); // function args.
+          if (!is_array($functionArgs)) {
+            if (gettype($functionArgs) == "string") {
+              $onclick .= "'" . $functionArgs . "');";
+            } elseif (gettype($functionArgs) == "int") {
+              $onclick .= $functionArgs . ");";
+            }
+          } else {
+            for ($x = 0; $x < count($functionArgs); $x++) {
+              if (gettype($functionArgs[$x]) == "string") {
+                $onclick .= "'" . $functionArgs[$x] . "', ";
+              } elseif (gettype($functionArgs[$x]) == "int") {
+                $onclick .= $functionArgs[$x] . ", ";
+              }
+            }
+            $onclick = substr($onclick, 0, strlen($onclick) - 2);
+            $onclick .= ");";
+          }
+          $this->onclick = $onclick;
         default:
           throw new InvalidArgsException(func_get_arg(1));
       }
