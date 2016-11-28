@@ -225,12 +225,47 @@ class HTMLObject {
      * @param [type] $property [css property]
      * @param [type] $val      [css value]
      */
-    function addCSSRule($property, $val) {
-      if ($property != "" && $val != "") {
-        $this->style .= "$property:$val;";
+    function addCSSRule() {
+      $a = func_num_args();
+      switch($a) {
+        case 0:
+          throw new InvalidArgsException("No CSS Rule");
+        case 1:
+          if (is_array(func_get_arg(0))) {
+            if (FudgeUI::isAssoc(func_get_arg(0))) {
+              $rules = func_get_arg(0);
+              $keys = array_keys($rules);
+              foreach($keys as $key) {
+                $style = "$key:" . $rules[$key] . ";";
+                $this->style .= $style;
+              }
+            } else {
+              throw new InvalidArgsException("Associative array Expected");
+            }
+          } else {
+            throw new InvalidArgsException("Associative array Expected");
+          }
+        case 2:
+          $property = func_get_arg(0);
+          $val = func_get_arg(1);
+          if (!(is_array($property) && is_array($val))) {
+            if ($property != "" && $val != "") {
+              $this->style .= "$property:$val;";
+            } else {
+              if ($property == "") {
+                throw new InvalidArgsException("Property not given.");
+              } else {
+                throw new InvalidArgsException("Value of given property not set.");
+              }
+            }
+          } else {
+            throw new InvalidArgsException("Array not Expected");
+          }
+          break;
+        default:
+          throw new InvalidArgsException("Invalid Parameters");
       }
     }
-    // TODO: make this able to add multiple css rules with one function passing it an array.
     /**
      * [getCSSRules gets all set css rules for the html object. (equvalent of
      *              all rules in style attribute)]
@@ -554,7 +589,7 @@ class Form extends HTMLObject {
    * @param [string] $type  [html input type]
    */
   function addInput($placeholder, $name, $type) {
-
+    //TODO: to be overloaded.
   }
 }
 //--section-start-- {Section for html input items}
@@ -614,6 +649,7 @@ class TextInput {
    * [__construct description]
    */
   function __construct() {
+    //TODO: to be overloaded.
   }
 }
 //--section-end--

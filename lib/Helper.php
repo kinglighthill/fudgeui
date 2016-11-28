@@ -39,4 +39,9 @@ class String {
     return (substr($haystack, -$length) === $needle);
   }
 }
+class FudgeUI {
+  static function isAssoc(array $array) {
+    return count(array_filter(array_keys($array), 'is_string')) > 0;
+  }
+}
 ?>
