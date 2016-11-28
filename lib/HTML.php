@@ -203,6 +203,7 @@ class HTMLObject {
         case 0:
           break;
         case 1:
+          $id = func_get_arg(0);
           $id = str_replace(" ", "", $id);
           $this->id = $id;
           break;
@@ -265,18 +266,18 @@ class HTMLObject {
           break;
         case 2:
           $onclick = func_get_arg(0) . "("; // function name.
-          $funtionArgs = func_get_arg(1); // function args.
+          $functionArgs = func_get_arg(1); // function args.
           if (!is_array($functionArgs)) {
             if (gettype($functionArgs) == "string") {
               $onclick .= "'" . $functionArgs . "');";
-            } elseif (gettype($functionArgs) == "int") {
+            } elseif (gettype($functionArgs) == "integer") {
               $onclick .= $functionArgs . ");";
             }
           } else {
             for ($x = 0; $x < count($functionArgs); $x++) {
               if (gettype($functionArgs[$x]) == "string") {
                 $onclick .= "'" . $functionArgs[$x] . "', ";
-              } elseif (gettype($functionArgs[$x]) == "int") {
+              } elseif (gettype($functionArgs[$x]) == "integer") {
                 $onclick .= $functionArgs[$x] . ", ";
               }
             }
@@ -284,9 +285,17 @@ class HTMLObject {
             $onclick .= ");";
           }
           $this->onclick = $onclick;
+          break;
         default:
           throw new InvalidArgsException(func_get_arg(1));
       }
+    }
+    /**
+     * [getOnClick returns the value of the 'onclick' attribute of the html object]
+     * @return [string] [javascript function, empty string if not set]
+     */
+    function getOnClick() {
+      return $this->onclick;
     }
     /**
      * [setCSSRuleString sets the style attribute]

@@ -79,5 +79,14 @@ class HTMLObjectTest extends PHPunit_Framework_Testcase {
       $result = preg_match("/<p>otg<\/p>/", $html);
       $this->assertEquals(1, $result);
     }
+    function testSetOnClick() {
+      $div = new DIV("id");
+      $div->setOnClick("foo()");
+      $this->assertEquals("foo();", $div->getOnClick());
+      $div->setOnClick("foo", 67);
+      $this->assertEquals("foo(67);", $div->getOnClick());
+      $div->setOnClick("foo", array("hello", 78, "bar"));
+      $this->assertEquals("foo('hello', 78, 'bar');", $div->getOnClick());
+    }
 }
 ?>
