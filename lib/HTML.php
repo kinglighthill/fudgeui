@@ -28,7 +28,11 @@ class HTMLPage {
    * @param [string] $lang [the language to set to e.g. "en-US"]
    */
   function setLanguage($lang) {
-    $this->lang = $lang;
+    if (!is_array($lang) && gettype($lang) == "string") {
+      $this->lang = $lang;
+    } else {
+      throw new InvalidArgsException("Array not expected here");
+    }
   }
   /**
    * [setTitle sets the title of the html page]
