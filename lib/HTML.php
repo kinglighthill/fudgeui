@@ -43,7 +43,11 @@ class HTMLPage {
    * @return [null]
    */
   function appendChild($child) {
+    if (method_exists($child, "getTagName") && method_exists($child, "getView") && get_class($child) != "HTMLObject"){
       $this->body[] = $child;
+    } else {
+      throw new InvalidArgsException("Invalid Parameter");
+    }
   }
   /**
    * [getTitle gets the title of the html page]
