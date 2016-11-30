@@ -88,5 +88,11 @@ class HTMLObjectTest extends PHPunit_Framework_Testcase {
       $div->setOnClick("foo", array("hello", 78, "bar"));
       $this->assertEquals("foo('hello', 78, 'bar');", $div->getOnClick());
     }
+    function testMultipleCssRuleAddition() {
+      $div = new DIV("id");
+      $div->addCssRule(array("font-size"=>"55px", "width"=>"45px", "height"=>"34px"));
+      $html = $div->getView();
+      $this->assertEquals(1, preg_match("/<div id=\"id\" style=\"font-size:55px;width:45px;height:34px;\">/", $html));
+    }
 }
 ?>
