@@ -18,7 +18,10 @@ class HTMLPage {
    * @param [string] $title [the tile of the html page]
    */
   function __construct ($title) {
-      $this->title = $title;
+    if (is_array($title)) {
+      throw new InvalidArgsException("Array not expected here.");
+    }
+    $this->title = $title;
   }
   /**
    * [setLanguage sets the language of the html page]
@@ -190,7 +193,7 @@ class HTMLContainer {
 class HTMLObject {
     protected $id; // ID of the HMTLObject.
     protected $_class;
-    protected $name;
+    protected $name; // the name of the html tag or object being implemented
     protected $style; // variable for the style attribute.
     protected $body = array(); // The array that conatians html objects that children of the current html object
     protected $title; // popup text.
@@ -222,10 +225,16 @@ class HTMLObject {
     }
     /**
      * [addCSSRule adds a css rule to the style attribute]
-     * @param [type] $property [css property]
-     * @param [type] $val      [css value]
+     * **overloaded**
+     * {
+     * @param array $rules associatie array of css rules
+     * }
+     * {
+     * @param [string] $property [css property]
+     * @param [string] $val      [css value]
+     * }
      */
-    function addCSSRule() {
+    function addCssRule() {
       $a = func_num_args();
       switch($a) {
         case 0:
@@ -245,6 +254,7 @@ class HTMLObject {
           } else {
             throw new InvalidArgsException("Associative array Expected");
           }
+          break;
         case 2:
           $property = func_get_arg(0);
           $val = func_get_arg(1);
@@ -271,7 +281,7 @@ class HTMLObject {
      *              all rules in style attribute)]
      * @return [string] [css rules]
      */
-    function getCSSRules() {
+    function getCssRules() {
       return $this->style;
     }
     /**
@@ -440,8 +450,8 @@ class HTMLObject {
      *                               is empty]
      */
     protected function attribute($att, $val) {
-      // TODO: Validate for cases where the attribute value can contain double quotes and format differently.
       if ($val != "") {
+        $val = str_replace("\"", "'", $val);
         return " $att=\"$val\"";
       }
       return "";
@@ -644,12 +654,39 @@ class FormInput extends HTMLObject {
     return $this->type;
   }
 }
-class TextInput {
+class TextInput extends FormInput {
   /**
    * [__construct description]
+   * **overloaded**
+   * {
+   * @param string $id the id of the text input.
+   * }
+   * {
+   * @param string $name the value of the name tag of the text input.
+   * @param string $placeholder the placeholder of the text input.
+   * }
    */
   function __construct() {
-    //TODO: to be overloaded.
+    $a = func_num_args();
+    switch($a) {
+      case 0:
+        break;
+      case 1:
+        if (!is_array(func_get_arg(0))) {
+          parent::__construct(func_get_arg(0));
+          break;
+        }
+        throw new InvalidArgsException("Array not expected");
+      case 2:
+        if (!(is_array(func_get_arg(0)) &&  is_array(func_get_arg(1)))) {
+          parent::__construct(func_get_arg(0));
+          $this->keyName = func_get_arg(1);
+          break;
+        }
+        throw new InvalidArgsException("Array not expected");
+      default:
+        throw new InvalidArgsException("Wrong number of arguments given");
+    }
   }
 }
 //--section-end--
