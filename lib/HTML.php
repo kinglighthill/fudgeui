@@ -517,9 +517,23 @@ class HTMLObject {
      * @param  [string] $child [html object]
      * @return [null]
      */
-    function appendChild($child) {
+    function appendChild() {
+      $a = func_get_arg();
+      switch ($a) {
+        case 0:
+          throw new InvalidArgsException("Null");
+        case 1:
+          $child = func_get_arg(0);
+          break;
+        case 2:
+          if (gettype(func_get_arg(0)) == "integer" && func_get_arg(0) < count($this->body)) {
+            $this->body[func_get_arg(0)]->appendChild(func_get_arg(1));
+          }
+      }
       if (get_parent_class($child) == "HTMLObject" || get_parent_class($child) == "FormInput") {
         $this->body[] = $child;
+      } else {
+        throw new InvalidArgsException("HTMLObject child expected");
       }
     }
     /**
