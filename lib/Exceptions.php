@@ -11,4 +11,9 @@ class InvalidArgsException extends Exception {
     return $errorMsg;
   }
 }
+class InvalidIndexException extends Exception {
+  public function message() {
+    $errorMsg = "Specified index " . $this->getMessage() . " does not exist; supplied at line" . $this->getLine();
+  }
+}
 ?>
