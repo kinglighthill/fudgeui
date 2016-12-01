@@ -39,7 +39,11 @@ class HTMLPage {
    * @param [string] $title [the new title of the html page]
    */
   function setTitle($title) {
+    if (gettype($title) == "integer" || gettype($title) == "string") {
       $this->title = $title;
+    } else {
+      throw new InvalidArgsException("Integer or String accepted");
+    }
   }
   /**
    * [appendChild adds html objects to the html page body tag or just body...:)]
@@ -63,18 +67,62 @@ class HTMLPage {
   /**
    * [addStyleSheet adds a url css link to the head section of the html page
    *                equivalent of "<link rel="stylesheet" href="$css"/>]
+   * **overloaded **
+   * {
    * @param [string] $css [url to css file (can be relative)]
+   * }
+   * {
+   * @param [array(string)] $css [non-associative array of urls]
+   * }
    */
   function addStyleSheet($css) {
+    if (is_array($css)) {
+      if (!FudgeUI::isAssoc($css)) {
+        foreach ($css as $url) {
+          if (gettype($url) == "string"){
+            $this->cssSheets[] = $url;
+          } else {
+            throw new InvalidArgsException("Strings expected as content of array");
+          }
+        }
+      } else {
+        throw new InvalidArgsException("Non associative array expected.");
+      }
+    } elseif (gettype($css) == "string") {
       $this->cssSheets[] = $css;
+    } else {
+      throw new InvalidArgsException("String url expected");
+    }
   }
   /**
    * [addJS adds a url to a script tag in a html page
    *        equivalent of <script src="$js"></script>]
+   * **overloaded**
+   * {   *
    * @param [string] $js [the url to the .js file (can be relative)]
+   * }
+   * {
+   * @param [array(string)] $js [the urls to .js files (can be relative)]
+   * }
    */
   function addJS($js) {
+    if (is_array($js)) {
+      if (!FudgeUI::isAssoc($js)) {
+        foreach ($js as $url) {
+          if (gettype($url) == "string"){
+            $this->jsScripts[] = $url;
+          } else {
+            throw new InvalidArgsException("Strings expected as content of array");
+          }
+        }
+      } else {
+        throw new InvalidArgsException("Non associative array expected.");
+      }
+    } elseif (gettype($js) == "string") {
       $this->jsScripts[] = $js;
+    } else {
+      throw new InvalidArgsException("String url expected");
+    }
   }
   /**
    * [getView outputs the html representation of the html page]
