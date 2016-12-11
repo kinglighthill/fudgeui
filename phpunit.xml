@@ -1,4 +1,4 @@
-<phpunit bootstrap="lib/autoload.php">
+<phpunit bootstrap="lib/fudgeui.php">
   <testsuites>
     <testsuite name="html">
       <file>tests/page_test.php</file>
