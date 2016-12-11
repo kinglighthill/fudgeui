@@ -21,6 +21,14 @@ class HTMLPage {
     if (is_array($title)) {
       throw new InvalidArgsException("Array not expected here.");
     }
+    $this->addJS("https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js");
+    $this->addStyleSheet("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css");
+    $this->addStyleSheet("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js");
+    $host = $_SERVER["HTTP_HOST"];
+    $self = $_SERVER["PHP_SELF"];
+    $self = substr($self, 0, strrpos($self, "/"));
+    $self .= "/css/ui.css";
+    $this->addStyleSheet($host . $self);
     $this->title = $title;
   }
   /**
@@ -129,9 +137,11 @@ class HTMLPage {
    * @return [null]
    */
   function getView() {
-      $html = "<html" . $this->attribute("lang", $this->lang) .  ">$this->nl";
+      $html = "<html" . $this->attribute("lang", $this->lang) . ">$this->nl";
       $html .= "<head>$this->nl";
       $html .= "<title>$this->title</title>$this->nl";
+      $html .= "<meta charset=\"utf-8\">$this->nl";
+      $html .= "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">$this->nl";
       for ($x = 0; $x < count($this->cssSheets); $x++) {
           $html .= "<link rel=\"stylesheet\" href=\"" . $this->cssSheets[$x] . "\"/>$this->nl";
       }
@@ -140,9 +150,11 @@ class HTMLPage {
       }
       $html .= "</head>$this->nl";
       $html .= "<body>$this->nl";
+      $html .= "<div class=\"container-fluid\"> " . PHP_EOL;
       for ($x = 0; $x < count($this->body); $x++) {
           $html .= $this->body[$x]->getView();
       }
+      $html .= "</div>$this->nl";
       $html .= "</body>$this->nl";
       $html .= "</html>";
       return $html;
@@ -518,22 +530,28 @@ class HTMLObject {
      * @return [null]
      */
     function appendChild() {
-      $a = func_get_arg();
+      $a = func_num_args();
       switch ($a) {
         case 0:
           throw new InvalidArgsException("Null");
         case 1:
           $child = func_get_arg(0);
+          if (get_parent_class($child) == "HTMLObject" || get_parent_class($child) == "FormInput") {
+            $this->body[] = $child;
+          } else {
+            throw new InvalidArgsException("HTMLObject child expected");
+          }
           break;
         case 2:
           if (gettype(func_get_arg(0)) == "integer" && func_get_arg(0) < count($this->body)) {
             $this->body[func_get_arg(0)]->appendChild(func_get_arg(1));
           }
+          break;
       }
-      if (get_parent_class($child) == "HTMLObject" || get_parent_class($child) == "FormInput") {
-        $this->body[] = $child;
-      } else {
-        throw new InvalidArgsException("HTMLObject child expected");
+    }
+    function getChild($index) {
+      if ($index < count($this->body)) {
+        return $this->body[$index];
       }
     }
     /**
@@ -609,7 +627,7 @@ class P extends HTMLObject {
     $c = count($this->body);
     if ($c <= 1 && !is_object($this->body[0])) {
       if ($c != 0) {
-        if (strlen($this->body[0]) < 50) {
+        if (strlen($this->body[0]) < 100) {
           $html .= $this->body[0] . "</p>" . PHP_EOL;
         } else {
           $html .= PHP_EOL;
@@ -688,7 +706,7 @@ class FormInput extends HTMLObject {
   function __construct($id) {
     $this->id = $id;
     $this->name = "input";
-    //$this->validator = new  HTMLValidator();
+    //TODO: overload.
   }
   /**
    * [setName sets the name of the html input tag; necessary if you are gount to
@@ -757,6 +775,22 @@ class TextInput extends FormInput {
       default:
         throw new InvalidArgsException("Wrong number of arguments given");
     }
+  }
+  /**
+   * [getView gets the html representation of the text input]
+   * @return [string] [html]
+   */
+  function getView() {
+    return "<input type=\"$this->type\" $attributesString/>" . PHP_EOL;
+  }
+  function appendChild() {
+    // Overidden and does nothing.
+  }
+  function getChild($index) {
+    // Overidden and does nothing.
+  }
+  function setChild($child) {
+    // Overidden and does nothing.
   }
 }
 //--section-end--

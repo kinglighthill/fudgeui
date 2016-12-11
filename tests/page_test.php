@@ -13,7 +13,6 @@ class HTML5Test extends PHPunit_Framework_Testcase {
         $page->addStyleSheet("http://www.maxcdn.com/css/style.css");
         $result = (strpos($page->getView(), "<link rel=\"stylesheet\" href=\"http://www.maxcdn.com/css/style.css\"/>") != false);
         $this->assertTrue($result);
-    }
     function testStylesheetsTagsWrappingNicely() {
         $page = new HTMLPage("Title");
         $page->addStyleSheet("http://www.w3schools.com/css/style.css");
