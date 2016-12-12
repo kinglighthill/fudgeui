@@ -59,7 +59,7 @@ class HTMLPage {
    * @return [null]
    */
   function appendChild($child) {
-    if (method_exists($child, "getTagName") && method_exists($child, "getView") && get_class($child) != "HTMLObject"){
+    if ((method_exists($child, "getTagName") && method_exists($child, "getView") && get_class($child) != "HTMLObject") || (get_parent_class($child) == "Layout") || (get_parent_class($child) == "BootStrap")){
       $this->body[] = $child;
     } else {
       throw new InvalidArgsException("Invalid Parameter");
@@ -257,6 +257,9 @@ class HTMLContainer {
         }
         return $html;
     }
+}
+interface HTMLView {
+  public function getView();
 }
 class HTMLObject {
     protected $id; // ID of the HMTLObject.
@@ -564,6 +567,57 @@ class HTMLObject {
     }
 }
 /**
+ * Header tag (HTML).
+ */
+class Header extends HTMLObject implements HTMLView {
+  function getView() {
+    $html = "<header";
+    $html .= $this->attribute("id", $this->id);
+    $html .= $this->attribute("class", $this->getClassString());
+    $html .= $this->attribute("style", $this->style);
+    $html .= $this->attribute("title", $this->title);
+    $html .= $this->attribute("onclick", $this->onclick);
+    $html .= $this->attributesString;
+    $html .= ">" . PHP_EOL;
+    if (count($this->body) > 0) {
+      for ($x = 0; $x < count($this->body); $x++) {
+        $html .= $this->body[$x]->getView();
+      }
+    }
+    $html .= "</header>" . PHP_EOL;
+    return $html;
+  }
+}
+class IMG extends HTMLObject implements HTMLView {
+  private $src;
+  function __construct() {
+    $a = func_num_args();
+    switch ($a) {
+      case 0:
+        break;
+      case 1:
+        $this->src = func_get_arg(0);
+        break;
+      case 2:
+        $this->id = func_get_arg(0);
+        $this->src = func_get_arg(1);
+        break;
+    }
+  }
+  function getView() {
+    $html = "<img";
+    $html .= $this->attribute("src", $this->src);
+    $html .= $this->attribute("id", $this->id);
+    $html .= $this->attribute("class", $this->getClassString());
+    $html .= $this->attribute("style", $this->style);
+    $html .= $this->attribute("title", $this->title);
+    $html .= $this->attribute("onclick", $this->onclick);
+    $html .= " " . $this->attributesString;
+    $html .= "/>" . PHP_EOL;
+    return $html;
+  }
+}
+/**
  * DIV tag (HTML).
  */
 class DIV extends HTMLObject {
@@ -578,7 +632,8 @@ class DIV extends HTMLObject {
       $html .= $this->attribute("style", $this->style);
       $html .= $this->attribute("title", $this->title);
       $html .= $this->attribute("onclick", $this->onclick);
-      $html .= $this->attributesString;
+      $html .= " " . $this->attributesString;
+      $html = trim($html);
       $html .= ">" . PHP_EOL;
       if (count($this->body) > 0) {
         for ($x = 0; $x < count($this->body); $x++) {
