@@ -15,6 +15,9 @@ class BSColumn {
   function setSpan($span) {
     $this->span = $span;
   }
+  function getSpan() {
+    return $this->span;
+  }
   function setDeviceConfig($device) {
     $this->devices = array($device);
   }
@@ -41,6 +44,17 @@ class BSRow extends BootStrap {
   private $devices = array("md");
   private $columns = array();
   function addColumn($column) {
+    if (count($this->columns) > 0) {
+      $x = 0;
+      foreach ($this->columns as $col) {
+        $x += $col->getSpan();
+      }
+      if ($x > 12) {
+        throw new BSSpanLimitException($x);
+      }
+    } elseif ($column->getSpan() > 12) {
+      throw new BSSpanLimitException($column->getSpan());
+    }
     $this->columns[] = $column;
   }
   function getView() {
