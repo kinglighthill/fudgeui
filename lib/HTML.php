@@ -13,6 +13,7 @@ class HTMLPage {
   private $jsScripts = array(); // JS Sheets Collection for the html page.
   private $body = array(); // Array to contain html objects to be generated for the body of the page.
   private $lang = "en-US"; // The language of the html page.
+  private $bg; // Background Image.
   /**
    * [__construct constructor for the html page object.]
    * @param [string] $title [the tile of the html page]
@@ -149,7 +150,12 @@ class HTMLPage {
           $html .= "<script src=\"" . $this->jsScripts[$x] . "\"></script>$this->nl";
       }
       $html .= "</head>$this->nl";
-      $html .= "<body>$this->nl";
+      $html .= "<body";
+      if ($this->bg != "") {
+        $html .= " style=\"background-image:url($this->bg)\">$this->nl";
+      } else {
+        $html .= ">$this->nl";
+      }
       $html .= "<div class=\"container-fluid\"> " . PHP_EOL;
       for ($x = 0; $x < count($this->body); $x++) {
           $html .= $this->body[$x]->getView();
@@ -173,6 +179,9 @@ class HTMLPage {
       return " $att=\"$val\"";
     }
      return "";
+  }
+  function setBackgroundImage($bg) {
+    $this->bg = $bg;
   }
 }
 /**
@@ -539,7 +548,7 @@ class HTMLObject {
           throw new InvalidArgsException("Null");
         case 1:
           $child = func_get_arg(0);
-          if (get_parent_class($child) == "HTMLObject" || get_parent_class($child) == "FormInput") {
+          if (get_parent_class($child) == "HTMLObject" || get_parent_class($child) == "FormInput" || get_parent_class($child) == "BootStrap") {
             $this->body[] = $child;
           } else {
             throw new InvalidArgsException("HTMLObject child expected");

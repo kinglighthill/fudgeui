@@ -2,10 +2,33 @@
 class BootStrap {
 
 }
-class BSJumbotron {
-
+class BSJumbotron extends BootStrap {
+  private $top;
+  private $bottom;
+  private $jumbo;
+  function __construct() {
+    $this->jumbo = new DIV();
+    $this->jumbo->addClass("jumbotron");
+  }
+  function setTopContent($top) {
+    $this->top = $top;
+  }
+  function setBottomContent($bottom) {
+    $this->bottom = $bottom;
+  }
+  function addCSSRule($rule, $val) {
+    $this->jumbo->addCssRule($rule, $val);
+  }
+  function getView() {
+    if ($this->top != null || $this->bottom != null) {
+      $this->top == null ? "" : $this->jumbo->appendChild($this->top);
+      $this->bottom == null ? "" : $this->jumbo->appendChild($this->bottom);
+      return $this->jumbo->getView();
+    }
+    return "";
+  }
 }
-class BSColumn {
+class BSColumn extends BootStrap {
   private $devices = array("md");
   private $span;
   private $view; // The HTML Object in the column.
@@ -36,7 +59,7 @@ class BSColumn {
     } else {
       $column->addClass("col-" . $this->devices[0] . "-$this->span");
     }
-    $column->appendChild($this->view);
+    $this->view == null ? "" : $column->appendChild($this->view);
     return $column;
   }
 }
@@ -58,15 +81,12 @@ class BSRow extends BootStrap {
     $this->columns[] = $column;
   }
   function getView() {
-    $div = new DIV();
-    $div->addClass("container-fluid");
     $row = new DIV();
     $row->addClass("row");
     foreach ($this->columns as $column) {
       $row->appendChild($column->getColumn());
     }
-    $div->appendChild($row);
-    return $div->getView();
+    return $row->getView();
   }
 }
 ?>
