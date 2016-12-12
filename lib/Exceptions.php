@@ -14,6 +14,13 @@ class InvalidArgsException extends Exception {
 class InvalidIndexException extends Exception {
   public function message() {
     $errorMsg = "Specified index " . $this->getMessage() . " does not exist; supplied at line" . $this->getLine();
+    return $errorMsg;
+  }
+}
+class BSSpanLimitException extends Exception {
+  public function message() {
+    $errorMsg = "Sum of spans (" .$this->getMessage() . ") for bootstrap row has been exceeded";
+    return $errorMsg;
   }
 }
 ?>
