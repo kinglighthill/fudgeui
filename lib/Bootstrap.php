@@ -13,8 +13,14 @@ class BSJumbotron extends BootStrap {
   function setTopContent($top) {
     $this->top = $top;
   }
+  function setTopText($text) {
+    $this->top = new P($text); // Supposed to be Header
+  }
   function setBottomContent($bottom) {
     $this->bottom = $bottom;
+  }
+  function setBottomText($text) {
+    $this->bottom = new P($text);
   }
   function addCSSRule($rule, $val) {
     $this->jumbo->addCssRule($rule, $val);
@@ -87,6 +93,44 @@ class BSRow extends BootStrap {
       $row->appendChild($column->getColumn());
     }
     return $row->getView();
+  }
+}
+class BSFormInput extends BootStrap {
+  private $root;
+  function __construct() {
+    // TODO create div and append label and form input
+  }
+}
+class BSForm extends BootStrap {
+  private $form;
+  function __construct() {
+    $this->form = new Form();
+  }
+  function useGet() {
+    $this->form->useGet();
+  }
+  function usePost() {
+    $this->form->usePost();
+  }
+  function setAction($action) {
+    $this->form->setAction($action);
+  }
+  function addInput() {
+    $a = func_num_args();
+    switch($a) {
+      case 1:
+        $this->form->appendChild(func_get_arg(0));
+        break;
+      case 4:
+        // type, id, name, placeholder.
+
+    }
+  }
+  function appendChild() {
+
+  }
+  function getView() {
+    return $this->form->getView();
   }
 }
 ?>
