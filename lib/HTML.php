@@ -719,13 +719,13 @@ class P extends HTMLObject {
  * Form tag HTML
  */
 class Form extends HTMLObject {
-  private $method = "get"; // form method.
+  private $method; // form method.
   private $action;// for action.
   /**
    * [useGET sets the html form method attribute to get]
    * @return [null]
    */
-  function useGET() {
+  function useGet() {
     $this->method = "get";
   }
   /**
@@ -752,6 +752,17 @@ class Form extends HTMLObject {
    */
   function addInput($placeholder, $name, $type) {
     //TODO: to be overloaded.
+  }
+  function getView() {
+    $html = "<form";
+    $html .= ($this->action == "") ? "" : " action=\"$this->action\"";
+    $html .= ($this->method == "") ? "" : " method=\"$this->method\"";
+    $html .= ">" . PHP_EOL;
+    foreach($this->body as $item) {
+      $html .= $item->getView();
+    }
+    $html .= "</form>" . PHP_EOL;
+    return $html;
   }
 }
 //--section-start-- {Section for html input items}
