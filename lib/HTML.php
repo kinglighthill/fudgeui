@@ -765,6 +765,30 @@ class Form extends HTMLObject {
     return $html;
   }
 }
+class Label extends HTMLObject {
+  private $label;
+  function __construct() {
+    $a = func_num_args();
+    switch ($a) {
+      case 1:
+        $this->setAttribute("for", func_get_arg(0));
+        break;
+      case 2:
+        $this->setAttribute("for", func_get_arg(0));
+        $this->label = func_get_arg(1);
+        break;
+      default:
+        throw new InvalidArgsException("(wrong number of arguments)");
+    }
+  }
+  function setLabel($label) {
+    // TODO some string formatting functions here.
+    $this->label = $label;
+  }
+  function getView() {
+    return "<label" . $this->attributesString . "$this->label</label>";
+  }
+}
 //--section-start-- {Section for html input items}
 /**
  * Base Class for HTML form inputs.
@@ -815,6 +839,18 @@ class FormInput extends HTMLObject {
    */
   function getType() {
     return $this->type;
+  }
+  function getView() {
+    $html = "<input" . $this->attribute("id", $this->id);
+    $html .= $this->attribute("type", $this->type);
+    $html .= $this->attribute("name", $this->keyName);
+    $html .= $this->attribute("placeholder", $this->placeholder);
+    $html .= $this->attribute("class", $this->getClassString());
+    $html .= $this->attribute("style", $this->style);
+    $html .= $this->attribute("title", $this->title);
+    $html .= $this->attribute("onclick", $this->onclick);
+    $html ."/>";
+    return $html;
   }
 }
 class TextInput extends FormInput {
