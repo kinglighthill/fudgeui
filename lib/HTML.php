@@ -467,8 +467,11 @@ class HTMLObject {
      * [getID gets the id of the html element]
      * @return [string] [id string]
      */
-    function getID() {
+    function getId() {
         return $this->id;
+    }
+    function setId($id) {
+      $this->id = $id;
     }
     /**
      * [getTagName gets the tag name of the html tag]
@@ -766,27 +769,20 @@ class Form extends HTMLObject {
   }
 }
 class Label extends HTMLObject {
-  private $label;
-  function __construct() {
-    $a = func_num_args();
-    switch ($a) {
-      case 1:
-        $this->setAttribute("for", func_get_arg(0));
-        break;
-      case 2:
-        $this->setAttribute("for", func_get_arg(0));
-        $this->label = func_get_arg(1);
-        break;
-      default:
-        throw new InvalidArgsException("(wrong number of arguments)");
-    }
+  private $text;
+  function __construct($for, $text) {
+    $this->setAttribute("for", $for);
+    $this->text = $text;
   }
-  function setLabel($label) {
+  function setText($text) {
     // TODO some string formatting functions here.
-    $this->label = $label;
+    $this->text = $text;
   }
   function getView() {
-    return "<label" . $this->attributesString . "$this->label</label>";
+    return "<label$this->attributesString>$this->text</label>" . PHP_EOL;
+  }
+  function setFor($for) {
+    $this->setAttribute("for", $for);
   }
 }
 //--section-start-- {Section for html input items}
@@ -806,6 +802,9 @@ class FormInput extends HTMLObject {
     $this->id = $id;
     $this->name = "input";
     //TODO: overload.
+  }
+  function setPlaceholder($placeholder) {
+    $this->placeholder = $placeholder;
   }
   /**
    * [setName sets the name of the html input tag; necessary if you are gount to
@@ -849,7 +848,7 @@ class FormInput extends HTMLObject {
     $html .= $this->attribute("style", $this->style);
     $html .= $this->attribute("title", $this->title);
     $html .= $this->attribute("onclick", $this->onclick);
-    $html ."/>";
+    $html .= "/>" . PHP_EOL;
     return $html;
   }
 }

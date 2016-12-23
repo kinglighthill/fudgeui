@@ -1,6 +1,14 @@
 <?php
+// Instance Values.
+$controls = -1;
 class BootStrap {
-
+  static function generateControlNumber() {
+    ++$GLOBALS['controls'];
+    return $GLOBALS['controls'];
+  }
+  static function getLastControlNumber() {
+    return $GLOBALS['controls'];
+  }
 }
 class BSJumbotron extends BootStrap {
   private $top;
@@ -97,8 +105,54 @@ class BSRow extends BootStrap {
 }
 class BSFormInput extends BootStrap {
   private $root;
+  private $label;
+  private $input;
   function __construct() {
-    // TODO create div and append label and form input
+    // (0)id, (1)type, (2)label
+    // (0)id, (1)type, (2)label, (3)name
+    // (0)id, (1)type, (2)label, (3)name, (4)placeholder
+    $a = func_num_args();
+    if ($a >= 3) {
+      $this->root = new DIV("bs-" . (func_get_arg(0) == "" ? BootStrap::generateControlNumber() : func_get_arg(0)));
+      $this->label = new Label((func_get_arg(0) == "" ? BootStrap::getLastControlNumber() : func_get_arg(0)), func_get_arg(2));
+      $this->input = new FormInput((func_get_arg(0) == "" ? BootStrap::getLastControlNumber() : func_get_arg(0)));
+    }
+    switch ($a) {
+      case 0:
+        break;
+      case 5:
+        $this->input->setPlaceholder(func_get_arg(4));
+      case 4:
+        $this->input->setName(func_get_arg(3));
+      case 3:
+        $this->input->setType(func_get_arg(1));
+    }
+  }
+  function setId($id) {
+    $this->root == null ? $this->root = new DIV("bs-$id") : $this->root->setId("bs-$id");
+    $this->input == null ? $this->input = new FormInput($id) : $this->input->setId($id);
+    $this->label == null ? $this->label = new Label($id, "") : $this->label->setFor($id);
+  }
+  function setLabel($text) {
+    $this->label == null ? $this->label = new Label("", $text) : $this->label->setText($text);
+  }
+  function setType($type) {
+    if ($this->input == null) {
+      $this->input = new FormInput("");
+      $this->input->setType($type);
+    } else {
+      $this->input->setType($type);
+    }
+  }
+  function getView() {
+    if ($this->input != null) {
+      $this->root->addClass("form-group");
+      $this->root->appendChild($this->label);
+      $this->input->addClass("form-control");
+      $this->root->appendChild($this->input);
+      return $this->root->getView();
+    }
+    return "";
   }
 }
 class BSForm extends BootStrap {

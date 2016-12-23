@@ -9,6 +9,7 @@
       <file>tests/form_test.php</file>
       <file>tests/form_input_test.php</file>
       <file>tests/table_layout_test.php</file>
+      <file>tests/bootstrap_test.php</file>
     </testsuite>
   </testsuites>
 </phpunit>
