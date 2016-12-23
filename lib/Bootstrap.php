@@ -126,6 +126,9 @@ class BSFormInput extends BootStrap {
         $this->input->setName(func_get_arg(3));
       case 3:
         $this->input->setType(func_get_arg(1));
+        break;
+      default:
+        throw new InvalidArgsException("Wrong argument count");
     }
   }
   function setId($id) {
@@ -143,6 +146,12 @@ class BSFormInput extends BootStrap {
     } else {
       $this->input->setType($type);
     }
+  }
+  function setName($name) {
+    $this->input->setName($name);
+  }
+  function setPlaceholder($placeholder) {
+    $this->input->setPlaceholder($placeholder);
   }
   function getView() {
     if ($this->input != null) {
