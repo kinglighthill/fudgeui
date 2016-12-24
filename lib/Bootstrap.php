@@ -184,9 +184,10 @@ class BSForm extends BootStrap {
       case 1:
         $this->form->appendChild(func_get_arg(0));
         break;
+      case 3:
+      // type, name, placeholder.
       case 4:
         // type, id, name, placeholder.
-
     }
   }
   function appendChild() {
