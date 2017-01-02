@@ -5,7 +5,7 @@ require_once("Helper.php");
 require_once("Exceptions.php");
 require_once("VLogger.php");
 require_once("Layouts.php");
-require_once("Bootstrap.php");
+require_once("BootStrap.php");
 // Class Fudge UI.
 class FudgeUI {
   static function isAssoc(array $array) {

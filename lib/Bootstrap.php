@@ -16,6 +16,16 @@ class BSJumbotron extends BootStrap {
   private $jumbo;
   function __construct() {
     $this->jumbo = new DIV();
+    $a = func_num_args();
+    switch ($a) {
+      case 0:
+        break;
+      case 1:
+        $this->jumbo-setId(func_get_arg(0));
+        break;
+      default:
+        throw new InvalidArgsException("Wrong Argument Count");
+    }
     $this->jumbo->addClass("jumbotron");
   }
   function setTopContent($top) {
@@ -164,6 +174,35 @@ class BSFormInput extends BootStrap {
     return "";
   }
 }
+class BSEmailInput extends BSFormInput {
+  function __construct() {
+    // (0)id, (1)label
+    // (0)id, (1)label, (2)name
+    // (0)id, (1)label, (2)name, (3)placeholder
+    $a = func_num_args();
+    if ($a >= 2) {
+      $this->root = new DIV("bs-" . (func_get_arg(0) == "" ? BootStrap::generateControlNumber() : func_get_arg(0)));
+      $this->label = new Label((func_get_arg(0) == "" ? BootStrap::getLastControlNumber() : func_get_arg(0)), func_get_arg(1));
+      $this->input = new FormInput((func_get_arg(0) == "" ? BootStrap::getLastControlNumber() : func_get_arg(0)));
+      $this->input->setType("email");
+    }
+    switch ($a) {
+      case 0:
+        break;
+      case 4:
+        $this->input->setPlaceholder(func_get_arg(3));
+      case 3:
+        $this->input->setName(func_get_arg(2));
+        break;
+      default:
+        throw new InvalidArgsException("Wrong argument count");
+    }
+    return $this;
+  }
+  function setType($type) {
+    // No Action Here.
+  }
+}
 class BSForm extends BootStrap {
   private $form;
   function __construct() {
@@ -179,6 +218,7 @@ class BSForm extends BootStrap {
     $this->form->setAction($action);
   }
   function addInput() {
+    // TODO overload
     $a = func_num_args();
     switch($a) {
       case 1:
