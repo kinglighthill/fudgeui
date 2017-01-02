@@ -190,22 +190,53 @@ class HTMLPage {
  * either a custon no html text in to a web page or you want to uses html tags or content that
  * is not yet supported.
  */
-class HTMLItem {
+class HTMLItem extends HTMLObject {
     private $content; // the content of this uhtml item.
-    private $name = "htmlItem";
+    private $mode = 0;
     /**
      * [__construct initializes the htmlItem with its supposed content]
      * @param [string] $content [content to contain/hold (this is not an array)]
      */
-    function __construct($content) {
-        $this->content = $content;
+    function __construct($mode, $content) {
+      $this->name = "htmlItem";
+      if ((gettype($content) == "string" || get_parent_class($content) == "HTMLObject" || method_exists($content, "getTagName")) && get_class($content) != "HTMLObject"){
+        if ($mode == 0) {
+          $this->mode = 0;
+          $this->content = array($content);
+        } elseif ($mode == 1) {
+          $this->content = $content;
+        } else {
+          throw new InvalidModeException($mode);
+        }
+      } else {
+        throw new InvalidArgsException("HTMLItem or HTMLObject expected.");
+      }
     }
     /**
      * [setContent sets the content of the htmlItem. This replaces the old content]
      * @param [string] $content [the new content of the htmlItem]
      */
     function setContent($content) {
+      if ($mode == 0) {
+        $this->content = array($content);
+      } else {
         $this->content = $content;
+      }
+    }
+    function setMode($mode) {
+      if ($mode == 0) {
+        $this->content = array();
+      } elseif ($mode == 1) {
+        $this->content = "";
+      } else {
+        throw new InvalidModeException($mode);
+      }
+      $this->mode = $mode;
+    }
+    function setTagName($tagName) {
+      if ($this->mode == 0) {
+        $this->name = $tagName;
+      }
     }
     /**
      * [appendContent appends new content specified to the end of the old content]
@@ -213,7 +244,11 @@ class HTMLItem {
      * @return [null]
      */
     function appendContent($content) {
+      if ($this->mode == 0) {
+        $this->content[] = $content;
+      } else {
         $this->content .= $content;
+      }
     }
     /**
      * [getTagName gets the supposed tag name of this object, this is a special case as this object
@@ -228,7 +263,22 @@ class HTMLItem {
      * [getView renders the html of the object]
      * @return [string] [html of the object]
      */
+    function setAttribute($key, $val) {
+      if ($this->mode == 0) {
+        parent::setAttribute($key, $val);
+      }
+    }
     function getView() {
+      $html = "";
+      if ($this->mode == 0) {
+        $html = "<$this->name" . $this->attributesString . ">" . PHP_EOL;
+        // TODO add style attribute...
+        foreach ($this->content as $obj) {
+          $html .= $obj->getView();
+        }
+        $html .= "</$this->name>";
+        return $html;
+      }
         return $this->content;
     }
 }

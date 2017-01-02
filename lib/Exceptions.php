@@ -23,4 +23,10 @@ class BSSpanLimitException extends Exception {
     return $errorMsg;
   }
 }
+class InvalidModeException extends Exception {
+  public function message() {
+    $errorMsg = "Mode number (" .$this->getMessage() . ") given is invalid";
+    return $errorMsg;
+  }
+}
 ?>
