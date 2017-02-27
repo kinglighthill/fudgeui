@@ -1,6 +1,6 @@
 <?php
 // Instance Values.
-$controls = -1;
+$controls = -1; // for unique identifying of bootstrap controls without given id's.
 class BootStrap {
   static function generateControlNumber() {
     ++$GLOBALS['controls'];
@@ -55,6 +55,7 @@ class BSJumbotron extends BootStrap {
 class BSColumn extends BootStrap {
   private $devices = array("md");
   private $span;
+  private $padding; // Column padding.
   private $view; // The HTML Object in the column.
   function __construct($span) {
     $this->span = $span;
@@ -74,8 +75,14 @@ class BSColumn extends BootStrap {
   function setContent($content) {
     $this->view = $content;
   }
+  function setPadding($padding) {
+    $this->padding = $padding;
+  }
   function getColumn() {
     $column = new DIV();
+    if ($this->padding != 0) {
+      $column->addCssRule("padding", $this->padding);
+    }
     if (count($this->devices) > 1) {
       foreach ($this->devices as $device) {
         $column->addClass("col-$device-$this->span");
@@ -116,7 +123,7 @@ class BSRow extends BootStrap {
 class BSFormInput extends BootStrap {
   private $root;
   private $label;
-  private $input;
+  protected $input;
   function __construct() {
     // (0)id, (1)type, (2)label
     // (0)id, (1)type, (2)label, (3)name
@@ -180,10 +187,15 @@ class BSEmailInput extends BSFormInput {
     // (0)id, (1)label, (2)name
     // (0)id, (1)label, (2)name, (3)placeholder
     $a = func_num_args();
+    switch ($a) {
+      case 2:
+        parent::__construct(func_get_arg(0), "email", func_get_arg(1));
+        break;
+    }
     if ($a >= 2) {
       $this->root = new DIV("bs-" . (func_get_arg(0) == "" ? BootStrap::generateControlNumber() : func_get_arg(0)));
       $this->label = new Label((func_get_arg(0) == "" ? BootStrap::getLastControlNumber() : func_get_arg(0)), func_get_arg(1));
-      $this->input = new FormInput((func_get_arg(0) == "" ? BootStrap::getLastControlNumber() : func_get_arg(0)));
+      //$this->input = new BSFormInput((func_get_arg(0) == "" ? BootStrap::getLastControlNumber() : func_get_arg(0)));
       $this->input->setType("email");
     }
     switch ($a) {
@@ -193,6 +205,8 @@ class BSEmailInput extends BSFormInput {
         $this->input->setPlaceholder(func_get_arg(3));
       case 3:
         $this->input->setName(func_get_arg(2));
+        break;
+      case 2:
         break;
       default:
         throw new InvalidArgsException("Wrong argument count");

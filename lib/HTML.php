@@ -601,9 +601,10 @@ class HTMLObject {
           throw new InvalidArgsException("Null");
         case 1:
           $child = func_get_arg(0);
-          if (get_parent_class($child) == "HTMLObject" || get_parent_class($child) == "FormInput" || get_parent_class($child) == "BootStrap") {
+          if (get_parent_class($child) == "HTMLObject" || get_parent_class($child) == "FormInput" || get_parent_class($child) == "BootStrap" || method_exists($child, "getView")) {
             $this->body[] = $child;
           } else {
+            echo get_parent_class($child);
             throw new InvalidArgsException("HTMLObject child expected");
           }
           break;
