@@ -708,6 +708,60 @@ class DIV extends HTMLObject {
     }
 }
 /**
+ * Span (HTML Tag)
+ */
+class Span extends HTMLObject {
+  function __construct() {
+    $a = func_num_args();
+    switch ($a) {
+      case 0:
+        break;
+      case 1:
+        $this->body[] = func_get_arg(0);
+        break;
+      case 2:
+        $this->id = func_get_arg(0);
+        $this->body[] = func_get_arg(1);
+        break;
+    }
+  }
+  /**
+   * [getView returns equivalent html output]
+   * @return [string] [html content of the span]
+   */
+  function getView() {
+    $html = "<span";
+    $html .= $this->attribute("id", $this->id);
+    $html .= $this->attribute("class", $this->getClassString());
+    $html .= $this->attribute("style", $this->style);
+    $html .= $this->attribute("title", $this->title);
+    $html .= $this->attribute("onclick", $this->onclick);
+    $html .= " " . $this->attributesString;
+    $html = trim($html);
+    $html .= ">";
+    $c = count($this->body);
+    if ($c <= 1 && !is_object($this->body[0])) {
+      if ($c != 0) {
+        if (strlen($this->body[0]) < 100) {
+          $html .= $this->body[0] . "</span>" . PHP_EOL;
+        } else {
+          $html .= PHP_EOL;
+          $html .= $this->body[0] . PHP_EOL;
+          $html .= "</span>" . PHP_EOL;
+        }
+      } else {
+        return "";
+      }
+    } else {
+      for ($x = 0; $x < count($this->body); $x++) {
+        $html .= $this->body[$x]->getView();
+      }
+    }
+    $html .= "</span>" . PHP_EOL;
+    return $html;
+  }
+}
+/**
  * P tag (HTML)
  */
 class P extends HTMLObject {
