@@ -186,25 +186,28 @@ class HTMLPage {
 }
 /**
  * Class for HTML Item that can be used to put in contents into HTMLContainer class
- * Note: Do you not use this class trivially. this class is meant to be used to input
- * either a custon no html text in to a web page or you want to uses html tags or content that
+ * Note: Do not use this class trivially. this class is meant to be used to input
+ * either a custon no html text in to a web page or you want to use html tags or content that
  * is not yet supported.
  */
 class HTMLItem extends HTMLObject {
     private $content; // the content of this uhtml item.
-    private $mode = 0;
+    private $mode = 0; // mode in use.
     /**
      * [__construct initializes the htmlItem with its supposed content]
      * @param [string] $content [content to contain/hold (this is not an array)]
      */
     function __construct($mode, $content) {
       $this->name = "htmlItem";
-      if ((gettype($content) == "string" || get_parent_class($content) == "HTMLObject" || method_exists($content, "getTagName")) && get_class($content) != "HTMLObject"){
+      if ($mode == 1) {
+        $this->mode = 1;
+        $this->content = $content;
+        return;
+      }
+      if ((get_parent_class($content) == "HTMLObject" || method_exists($content, "getTagName")) && get_class($content) != "HTMLObject"){
         if ($mode == 0) {
           $this->mode = 0;
           $this->content = array($content);
-        } elseif ($mode == 1) {
-          $this->content = $content;
         } else {
           throw new InvalidModeException($mode);
         }
@@ -223,6 +226,11 @@ class HTMLItem extends HTMLObject {
         $this->content = $content;
       }
     }
+    /**
+     * [setMode sets the mode of the HTMLItem object.]
+     * @param [int] $mode [mode of the HTMLItem, 0-HTMLObject, 1-No-HTML objects
+     *                    or text.]
+     */
     function setMode($mode) {
       if ($mode == 0) {
         $this->content = array();
@@ -233,14 +241,18 @@ class HTMLItem extends HTMLObject {
       }
       $this->mode = $mode;
     }
+    /**
+     * [setTagName sets the tag name of the custom HTMLItem.]
+     * @param [string] $tagName [the tag name of the custom html item.]
+     */
     function setTagName($tagName) {
       if ($this->mode == 0) {
         $this->name = $tagName;
       }
     }
     /**
-     * [appendContent appends new content specified to the end of the old content]
-     * @param  [string] $content [the new content to append to the old one]
+     * [appendContent appends new content specified to the end of the old content.]
+     * @param  [string] $content [the new content to append to the old one.]
      * @return [null]
      */
     function appendContent($content) {
@@ -268,18 +280,29 @@ class HTMLItem extends HTMLObject {
         parent::setAttribute($key, $val);
       }
     }
+    /**
+     * [getView gets the html equivalent of the object.]
+     * @return [string] [html string.]
+     */
     function getView() {
       $html = "";
       if ($this->mode == 0) {
-        $html = "<$this->name" . $this->attributesString . ">" . PHP_EOL;
-        // TODO add style attribute...
+        $html = "<$this->name";
+        $html .= $this->attribute("id", $this->id);
+        $html .= $this->attribute("class", $this->getClassString());
+        $html .= $this->attribute("style", $this->style);
+        $html .= $this->attribute("title", $this->title);
+        $html .= $this->attribute("onclick", $this->onclick);
+        $html .= " " . $this->attributesString;
+        $html = trim($html);
+        $html .= ">" . PHP_EOL;
         foreach ($this->content as $obj) {
           $html .= $obj->getView();
         }
-        $html .= "</$this->name>";
+        $html .= "</$this->name>" . PHP_EOL;
         return $html;
       }
-        return $this->content;
+      return $this->content . PHP_EOL;
     }
 }
 /**
@@ -611,6 +634,8 @@ class HTMLObject {
         case 2:
           if (gettype(func_get_arg(0)) == "integer" && func_get_arg(0) < count($this->body)) {
             $this->body[func_get_arg(0)]->appendChild(func_get_arg(1));
+          } else {
+            // Throw IndexOutOfBoundsException.
           }
           break;
       }
