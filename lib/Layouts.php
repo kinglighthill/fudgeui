@@ -1,4 +1,9 @@
 <?php
+class Layouts {
+  static function getName() {
+    return "Layouts";
+  }
+}
 class Layout {
 
 }

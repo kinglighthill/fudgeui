@@ -1,4 +1,9 @@
 <?php
+class Helper {
+  static function getName() {
+    return "Helper";
+  }
+}
 /**
  *
  */
@@ -13,7 +18,7 @@ class HTMLValidator {
   }
 }
 /**
- *
+ * HTML Ref
  */
 class HTMLRef {
   /**
@@ -26,7 +31,7 @@ class HTMLRef {
                  "time", "datetime-local", "email", "search", "tel", "url");
   }
 }
-class String {
+class _String {
   static function startsWith($needle, $haystack) {
      $length = strlen($needle);
      return (substr($haystack, 0, $length) === $needle);
