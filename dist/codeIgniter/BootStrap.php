@@ -251,4 +251,61 @@ class BSForm extends BootStrap {
     return $this->form->getView();
   }
 }
+/**
+ * BootStrap Progress Bar
+ */
+class BSProgressBar extends BootStrap {
+  private $text; // Text to show within ptogress bar.
+  private $showValue; // boolean value to show progress value or not.
+  private $value;// the progress value.
+  private $id; // id of progress bar.
+  private $screenReaderText;
+  /**
+   * [__construct BootStrap Progress Bar Constructor]
+   */
+  function __construct() {
+    //(0)value
+    //(0)id, (1)value
+    //(0)id, (1)value (2)showValue
+    //(0)id, (1)value, (2)showValue, (3)text
+    $a = func_num_args();
+    switch($a) {
+      case 4:
+        $this->text = func_get_arg(3);
+      case 3:
+        $this->showValue = func_get_arg(2);
+      case 2:
+        $this->value = func_get_arg(1);
+        $this->id = func_get_arg(0);
+        break;
+      case 1:
+        $this->value = func_get_arg(0);
+        break;
+      default:
+        throw new InvalidArgsException("No Arguments");
+    }
+  }
+  function getView() {
+    $bar = new DIV("bs-" . ($this->id == "" ? BootStrap::generateControlNumber() : $this->id));
+    $bar->addClass("progress");
+    $realBar = new DIV();
+    $realBar->addClass("progress-bar");
+    $realBar->setAttribute("role", "progressbar");
+    $realBar->setAttribute("aria-valuenow", $this->value);
+    $realBar->setAttribute("aria-valuemin", 0);
+    $realBar->setAttribute("aria-valuemax", 100);
+    $realBar->addCssRule("width", $this->value . "%");
+    if ($this->screenReaderText != "") {
+      $label = new Span($this->screenReaderText);
+      $label->addClass("sr-only");
+      $realBar->appendChild($label);
+    }
+    if ($this->showValue) {
+      $label = new Span($this->value . "%");
+      $realBar->appendChild($label);
+    }
+    $bar->appendChild($realBar);
+    return $bar->getView();
+  }
+}
 ?>
