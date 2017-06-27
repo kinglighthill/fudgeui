@@ -999,4 +999,7 @@ class TextInput extends FormInput {
     // Overidden and does nothing.
   }
 }
+class Video extends HMTLObject {
+	
+}
 ?>
