@@ -999,7 +999,20 @@ class TextInput extends FormInput {
     // Overidden and does nothing.
   }
 }
+/**
+ * The HTML5 Video Tag Eqivalent
+ */
 class Video extends HMTLObject {
-	
+  private $autoplay;
+  private $controls;
+  function __construct() {
+    $a = func_num_args();
+    switch ($a) {
+      case 2:
+        $this->setAttribute("width", func_get_arg(0));
+        $this->setAttribute("height", func_get_arg(1));
+        break;
+    }
+  }
 }
 ?>
