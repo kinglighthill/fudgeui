@@ -1016,6 +1016,13 @@ class Video extends HMTLObject {
   }
 }
 class Table extends HTMLObject {
-
+  private $headers;
+  private $row;
+  function setHeaders($headers) {
+    $this->headers = $headers;
+  }
+  function addRow($row) {
+    $this->row = $row;
+  }
 }
 ?>
