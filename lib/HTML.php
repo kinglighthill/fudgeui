@@ -19,13 +19,12 @@ class HTMLObject {
       switch ($a) {
         case 0:
           break;
+        case 2:
+          $this->appendChild(func_get_arg(1));
         case 1:
           $id = func_get_arg(0);
           $id = str_replace(" ", "", $id);
           $this->id = $id;
-          break;
-        case 2:
-          $this->appendChild(func_get_arg(1));
           break;
       }
       $this->name = strtolower(get_class($this)); // Sets Tag object Name.
@@ -1003,6 +1002,7 @@ class TextInput extends FormInput {
  * The HTML5 Video Tag Eqivalent
  */
 class Video extends HMTLObject {
+  //TODO.
   private $autoplay;
   private $controls;
   function __construct() {
@@ -1014,5 +1014,8 @@ class Video extends HMTLObject {
         break;
     }
   }
+}
+class Table extends HTMLObject {
+
 }
 ?>
