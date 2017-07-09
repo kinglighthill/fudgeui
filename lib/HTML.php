@@ -697,6 +697,41 @@ class DIV extends HTMLObject {
       return $html;
     }
 }
+class Span extends HTMLObject {
+  function __construct() {
+    $a = func_num_args();
+    switch($a) {
+      case 1:
+        $this->body[] = func_get_arg(0);
+    }
+  }
+    /**
+     * [getView function to generate html equival of the html object.]
+     * @return [string] [html representation of object]
+     */
+    function getView() {
+      $html = "<span";
+      $html .= $this->attribute("id", $this->id);
+      $html .= $this->attribute("class", $this->getClassString());
+      $html .= $this->attribute("style", $this->style);
+      $html .= $this->attribute("title", $this->title);
+      $html .= $this->attribute("onclick", $this->onclick);
+      $html .= " " . $this->attributesString;
+      $html = trim($html);
+      $html .= ">";
+      if (count($this->body) > 0) {
+        for ($x = 0; $x < count($this->body); $x++) {
+          if (gettype($this->body[$x]) == "string") {
+            $html .= $this->body[$x];
+          } else {
+            $html .= $this->body[$x]->getView();
+          }
+        }
+      }
+      $html .= "</span>" . PHP_EOL;
+      return $html;
+    }
+}
 /**
  * A tag (HTML)
  */
