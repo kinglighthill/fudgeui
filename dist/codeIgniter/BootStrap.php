@@ -308,12 +308,4 @@ class BSProgressBar extends BootStrap {
     return $bar->getView();
   }
 }
-class BSTable extends BootStrap {
-  function __construct($style) {
-    
-  }
-}
-class BSTableRow extends BootStrap {
-
-}
 ?>
