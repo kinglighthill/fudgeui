@@ -185,7 +185,7 @@ class HTMLObject {
     /**
      * [hasClass checks existence of the specified class in the class attribute]
      * @param  [type]  $class [css class to check if exists]
-     * @return boolean        [true if class exists, flase if not exists]
+     * @return boolean        [true if class exists, false if not exists]
      */
     function hasClass($class) {
         return (strpos("*" . $this->_class, $class) != false);
@@ -999,7 +999,16 @@ class TextInput extends FormInput {
     // Overidden and does nothing.
   }
 }
-class Video extends HMTLObject {
-	
+
+class Video extends HTMLObject {
+  protected $width;
+  protected $height;
+  function __construct() {
+    $a = func_num_args();
+    switch($a) {
+      case 2:
+        $this->width = func_get_arg(0);
+    }
+  }
 }
 ?>
