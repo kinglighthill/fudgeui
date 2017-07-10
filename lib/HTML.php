@@ -870,7 +870,7 @@ class P extends HTMLObject {
     } else {
       $html .= PHP_EOL;
       for ($x = 0; $x < count($this->body); $x++) {
-        if (is_array($this->body[$x])) {
+        if (!is_array($this->body[$x]) && is_object($this->body[$x])) {
           $html .= $this->body[$x]->getView();
         } else {
           $html .= $this->body[$x];
