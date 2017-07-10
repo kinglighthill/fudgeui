@@ -296,6 +296,9 @@ class HTMLObject {
             $this->body[func_get_arg(0)]->appendChild(func_get_arg(1));
           }
           break;
+        default:
+          throw new InvalidArgsException("Incorrect Number of Arguments");
+
       }
     }
     function getChild($index) {
@@ -460,9 +463,14 @@ class HTMLPage {
    * @param  [HTMLObject] $child [html object]
    * @return [null]
    */
-  function appendChild($child) {
+  function appendChild($child,$child2) {
     if ((method_exists($child, "getTagName") && method_exists($child, "getView") && get_class($child) != "HTMLObject") || (get_parent_class($child) == "Layout") || (get_parent_class($child) == "BootStrap")){
-      $this->body[] = $child;
+      $this->body[0] = $child;
+    } else {
+      throw new InvalidArgsException("Invalid Parameter");
+    }
+    if ((method_exists($child2, "getTagName") && method_exists($child2, "getView") && get_class($child2) != "HTMLObject") || (get_parent_class($child2) == "Layout") || (get_parent_class($child2) == "BootStrap")){
+      $this->body[1] .= $child2;
     } else {
       throw new InvalidArgsException("Invalid Parameter");
     }
@@ -1033,6 +1041,7 @@ class TextInput extends FormInput {
     // Overidden and does nothing.
   }
 }
+
 class Video extends HTMLObject {
   protected $width;
   protected $height;
@@ -1043,6 +1052,8 @@ class Video extends HTMLObject {
         $this->width = func_get_arg(0);
     }
   }
+}
+
 class Table extends HTMLObject {
   private $headers;
   private $row;
