@@ -184,7 +184,7 @@ class HTMLObject {
     /**
      * [hasClass checks existence of the specified class in the class attribute]
      * @param  [type]  $class [css class to check if exists]
-     * @return boolean        [true if class exists, false if not exists]
+     * @return boolean        [true if class exists, flase if not exists]
      */
     function hasClass($class) {
         return (strpos("*" . $this->_class, $class) != false);
@@ -297,7 +297,7 @@ class HTMLObject {
           }
           break;
         default:
-          throw new InvalidArgsException("Incorrect Number of Arguments");
+          throw new InvalidArgsException("Error Processing Request", 1);
 
       }
     }
@@ -463,16 +463,41 @@ class HTMLPage {
    * @param  [HTMLObject] $child [html object]
    * @return [null]
    */
-  function appendChild($child,$child2) {
-    if ((method_exists($child, "getTagName") && method_exists($child, "getView") && get_class($child) != "HTMLObject") || (get_parent_class($child) == "Layout") || (get_parent_class($child) == "BootStrap")){
-      $this->body[0] = $child;
-    } else {
-      throw new InvalidArgsException("Invalid Parameter");
+  function appendChild() {
+    $a = func_num_args();
+    if($a == 0) {
+      throw new InvalidArgsException("Null");
+      break;
     }
-    if ((method_exists($child2, "getTagName") && method_exists($child2, "getView") && get_class($child2) != "HTMLObject") || (get_parent_class($child2) == "Layout") || (get_parent_class($child2) == "BootStrap")){
-      $this->body[1] .= $child2;
-    } else {
-      throw new InvalidArgsException("Invalid Parameter");
+    if($a == 1) {
+      if(is_array(func_get_arg(0))) {
+        $body = func_get_arg(0);
+        for ($i = 0; $i < sizeof($body); $i++) {
+          $child = $body[$i];
+          if ((method_exists($child, "getTagName") && method_exists($child, "getView") && get_class($child) != "HTMLObject") || (get_parent_class($child) == "Layout") || (get_parent_class($child) == "BootStrap")){
+            $this->body[$i] = $child;
+          } else {
+            throw new InvalidArgsException("Invalid Parameter");
+          }
+        }
+      } else {
+        $child = func_get_arg(0);
+        if ((method_exists($child, "getTagName") && method_exists($child, "getView") && get_class($child) != "HTMLObject") || (get_parent_class($child) == "Layout") || (get_parent_class($child) == "BootStrap")){
+          $this->body[] = $child;
+        } else {
+          throw new InvalidArgsException("Invalid Parameter");
+        }
+      }
+    }
+    if($a == 2){
+      if(gettype(func_get_arg(0)) == "integer" && func_get_arg(0) < count($this->body)) {
+        $this->body[func_get_arg(0)]->appendChild(func_get_arg(1));
+      }
+    }
+    if($a > 1 && gettype(func_get_arg(0)) != "integer"){
+      for($i = 0; $i < $a; $i++){
+        $this->appendChild(func_get_arg($i));
+      }
     }
   }
   /**
@@ -1041,19 +1066,23 @@ class TextInput extends FormInput {
     // Overidden and does nothing.
   }
 }
-
+/**
+ * The HTML5 Video Tag Eqivalent
+ */
 class Video extends HTMLObject {
-  protected $width;
-  protected $height;
+  //TODO.
+  private $autoplay;
+  private $controls;
   function __construct() {
     $a = func_num_args();
-    switch($a) {
+    switch ($a) {
       case 2:
-        $this->width = func_get_arg(0);
+        $this->setAttribute("width", func_get_arg(0));
+        $this->setAttribute("height", func_get_arg(1));
+        break;
     }
   }
 }
-
 class Table extends HTMLObject {
   private $headers;
   private $row;
