@@ -9,7 +9,7 @@ class HTMLObject {
     protected $_class;
     protected $name; // the name of the html tag or object being implemented
     protected $style; // variable for the style attribute.
-    protected $body = array(); // The array that conatians html objects that children of the current html object
+    protected $body = array(); // The array that contains html objects that children of the current html object
     protected $title; // popup text.
     protected $onclick;
     protected $attributesString; // a string containing all attribute value pair.
@@ -316,6 +316,17 @@ class HTMLObject {
     }
     function clearChildren() {
       $this->body = array();
+    }
+    function getView($name) {
+      $html = "<";
+      $html .= $name;
+      $html .= $this->attribute("id", $this->id);
+      $html .= $this->attribute("class", $this->getClassString());
+      $html .= $this->attribute("style", $this->style);
+      $html .= $this->attribute("title", $this->title);
+      $html .= $this->attribute("onclick", $this->onclick);
+      $html .= $this->attributesString;
+      return $html;
     }
 }
 class HTMLItem extends HTMLObject {
@@ -803,7 +814,7 @@ class A extends HTMLObject {
     } else {
       $html .= PHP_EOL;
       for ($x = 0; $x < count($this->body); $x++) {
-        if (is_array($this->body[$x])) {
+        if (!is_array($this->body[$x]) && is_object($this->body[$x])) {
           $html .= $this->body[$x]->getView();
         } else {
           $html .= $this->body[$x];
@@ -828,6 +839,7 @@ class P extends HTMLObject {
    * @param [html|string] $body [the content of the p object]
    */
   function __construct() {
+    parent::__construct();
     $a = func_num_args();
     switch ($a) {
       case 0:
@@ -846,13 +858,7 @@ class P extends HTMLObject {
    * @return [string] [html representation of the object]
    */
   function getView() {
-    $html = "<p";
-    $html .= $this->attribute("id", $this->id);
-    $html .= $this->attribute("class", $this->getClassString());
-    $html .= $this->attribute("style", $this->style);
-    $html .= $this->attribute("title", $this->title);
-    $html .= $this->attribute("onclick", $this->onclick);
-    $html .= $this->attributesString;
+    $html = parent::getView($this->name);
     $html .= ">";
     $c = count($this->body);
     if ($c <= 1 && !is_object($this->body[0])) {
@@ -920,7 +926,7 @@ class Form extends HTMLObject {
     //TODO: to be overloaded.
   }
   function getView() {
-    $html = "<form";
+    $html = parent::getView($this->name);
     $html .= ($this->action == "") ? "" : " action=\"$this->action\"";
     $html .= ($this->method == "") ? "" : " method=\"$this->method\"";
     $html .= ">" . PHP_EOL;
