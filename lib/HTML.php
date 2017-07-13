@@ -480,7 +480,7 @@ class HTMLPage {
       throw new InvalidArgsException("Null");
       break;
     }
-    if($a == 1) {
+    elseif($a == 1) {
       if(is_array(func_get_arg(0))) {
         $body = func_get_arg(0);
         for ($i = 0; $i < sizeof($body); $i++) {
@@ -500,15 +500,21 @@ class HTMLPage {
         }
       }
     }
-    if($a == 2){
+    elseif($a == 2){
       if(gettype(func_get_arg(0)) == "integer" && func_get_arg(0) < count($this->body)) {
         $this->body[func_get_arg(0)]->appendChild(func_get_arg(1));
       }
+      elseif(gettype(func_get_arg(0)) == "integer" && !(func_get_arg(0) < count($this->body))) {
+        throw new InvalidIndexException();
+      }
     }
-    if($a > 1 && gettype(func_get_arg(0)) != "integer"){
+    elseif($a > 1 && gettype(func_get_arg(0)) != "integer"){
       for($i = 0; $i < $a; $i++){
         $this->appendChild(func_get_arg($i));
       }
+    }
+    else {
+      throw new InvalidArgsException("Invalid Parameter");
     }
   }
   /**
